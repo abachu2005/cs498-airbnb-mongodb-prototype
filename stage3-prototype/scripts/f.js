@@ -1,11 +1,9 @@
 const { mdToPdf } = require("md-to-pdf");
+const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 
-const a = [
-  { src: "STAGE_3_Report_MongoDB_Airbnb.md", dst: "STAGE_3_Report_MongoDB_Airbnb.pdf" },
-  { src: "SLIDE_OUTLINE.md", dst: "SLIDE_OUTLINE.pdf" },
-];
+const a = path.join(__dirname, "..");
 
 const b = `
   body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.4; color: #1e2831; }
@@ -21,26 +19,29 @@ const b = `
 `;
 
 (async () => {
-  for (const x of a) {
-    const s = path.join(__dirname, "..", x.src);
-    if (!fs.existsSync(s)) {
-      console.log(`[pdf] skip missing ${x.src}`);
-      continue;
-    }
-    const d = path.join(__dirname, "..", x.dst);
-    console.log(`[pdf] ${x.src} -> ${x.dst}`);
+  const c = path.join(a, "STAGE_3_Report_MongoDB_Airbnb.tex");
+  if (fs.existsSync(c)) {
+    console.log("[pdf] tex -> pdf via tectonic");
+    const d = spawnSync("tectonic", [c], { cwd: a, stdio: "inherit" });
+    if (d.status !== 0) throw new Error(`tectonic exit ${d.status}`);
+  }
+
+  const e = path.join(a, "SLIDE_OUTLINE.md");
+  if (fs.existsSync(e)) {
+    console.log("[pdf] md -> pdf via md-to-pdf (SLIDE_OUTLINE)");
     await mdToPdf(
-      { path: s },
+      { path: e },
       {
-        dest: d,
+        dest: path.join(a, "SLIDE_OUTLINE.pdf"),
         css: b,
         pdf_options: { format: "Letter", margin: { top: "0.65in", bottom: "0.65in", left: "0.72in", right: "0.72in" } },
         launch_options: { args: ["--no-sandbox"] },
       }
     );
   }
+
   console.log("[pdf] done");
-})().catch((e) => {
-  console.error(e);
+})().catch((x) => {
+  console.error(x);
   process.exit(1);
 });

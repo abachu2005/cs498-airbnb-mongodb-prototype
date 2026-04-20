@@ -41,11 +41,11 @@ Outputs:
 
 ## Build the PDFs
 
-The Stage 3 report and slide outline are written in Markdown and rendered to PDF via `md-to-pdf`:
+The Stage 3 report is written in LaTeX (`STAGE_3_Report_MongoDB_Airbnb.tex`) and the slide outline in Markdown (`SLIDE_OUTLINE.md`). One script builds both:
 
 ```bash
 cd stage3-prototype
 node scripts/f.js
 ```
 
-This produces `STAGE_3_Report_MongoDB_Airbnb.pdf` and `SLIDE_OUTLINE.pdf` in `stage3-prototype/`.
+This produces `STAGE_3_Report_MongoDB_Airbnb.pdf` (via `tectonic`) and `SLIDE_OUTLINE.pdf` (via `md-to-pdf`) in `stage3-prototype/`. Requires `tectonic` (install with `brew install tectonic`) for the LaTeX report.

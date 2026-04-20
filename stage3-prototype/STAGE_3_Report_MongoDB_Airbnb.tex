@@ -1,0 +1,101 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.72in,top=0.6in,bottom=0.6in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\setstretch{1.0}
+\tolerance=400
+\emergencystretch=1em
+\setlength{\parskip}{1pt plus 0.5pt}
+\setlength{\parindent}{0.7em}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\setlist{nosep,leftmargin=1.3em,topsep=1pt,partopsep=0pt}
+\titlespacing*{\section}{0pt}{4pt plus 1pt}{2pt}
+\titlespacing*{\subsection}{0pt}{3pt plus 1pt}{1pt}
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection}{0.5em}{}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\bfseries,
+  commentstyle=\color{gray},
+  breaklines=true,
+  frame=single,
+  framesep=2pt,
+  xleftmargin=3pt,
+  xrightmargin=3pt,
+  aboveskip=2pt,
+  belowskip=2pt,
+}
+
+\title{\vspace{-2.0em}Task 3 -- Prototype Implementation: MongoDB + AirBnB\vspace{-0.4em}}
+\author{Abhinav Bachu, Hanshul Bahl, Alejandra Arias\\CS 498 / Data Management in the Cloud}
+\date{04/20/2026}
+
+\begin{document}
+\maketitle
+\vspace{-2.0em}
+
+\section{Stage 3 Goal and Scope}
+
+Stage~2 was the design: four collections (\texttt{listings}, \texttt{calendar}, \texttt{reviews}, \texttt{neighborhoods}), eight compound indexes, and pseudocode for all six AirBnB queries. Stage~3 turns that design into a working prototype that boots a MongoDB instance via \texttt{mongodb-memory-server}, loads real InsideAirbnb data for four cities (Los Angeles, Portland, Salem, San Diego), and runs three queries end-to-end with \texttt{explain('executionStats')} captured so we can show \emph{actual} index usage rather than promised index usage. The data model and indexes are unchanged from Stage~2 \S2.2; everything else---loader, query implementations, driver, evidence capture---is new. Loaded volumes (single \texttt{npm~start} run, $<10$\,s on a laptop): 1{,}780~listings, 4{,}000~reviews, 411~neighborhoods, 8{,}000~calendar rows.
+
+\section{Implemented Subset}
+
+We implemented Q1, Q5, and Q6 specifically because they cover the three distinct query \emph{styles} in the design. \textbf{Q1} (Portland 2-day search) demos filter+group+lookup+sort. \textbf{Q5} (December reviews per city per year) is a pure aggregation. \textbf{Q6} (re-book reminder + same-host listings) is multi-step orchestration touching all four collections. We deliberately skipped Q3/Q4 because both rely on the same per-listing run-segmentation logic that the Stage~2 report already flagged as awkward in pure aggregation, and Q2 is essentially a set difference layered on the same calendar index Q1 uses.
+
+\section{Query Implementations and Execution Plans}
+
+\subsection{Q1 -- Portland 2-day search}
+\begin{lstlisting}
+[ {$match: {city:"portland", date:{$in:dates}, available:true}},
+  {$group: {_id:"$listing_id", a:{$sum:1}}}, {$match:{a:dates.length}},
+  {$lookup:{from:"listings", let:{l:"$_id"}, as:"b", pipeline:[
+     {$match:{$expr:{$and:[{$eq:["$city","portland"]},{$eq:["$listing_id","$$l"]}]}}},
+     {$project:{_id:0,name:1,neighborhood:1,room_type:1,accommodates:1,property_type:1,price:1,review_scores_rating:1}}]}},
+  {$unwind:"$b"},{$replaceRoot:{newRoot:"$b"}},
+  {$sort:{review_scores_rating:-1, listing_id:1}}, {$limit:25} ]
+\end{lstlisting}
+\textbf{Plan:} \texttt{IXSCAN} on \texttt{city\_1\_date\_1\_available\_1}; \texttt{nReturned=3, totalKeysExamined=6, totalDocsExamined=6, executionTimeMillis=3}. The \texttt{\$lookup} hits \texttt{city\_1\_listing\_id\_1} (unique). Top result in the recorded run: ``Beautiful Apt near City Center!'' (Irvington, rating 4.94) for the dynamically picked window 2025-12-04 / 2025-12-05.
+
+\subsection{Q5 -- December reviews per city per year}
+\begin{lstlisting}
+[ {$match: {date: {$regex: /^\d{4}-12-\d{2}$/}}},
+  {$group: {_id:{city:"$city", year:{$substr:["$date",0,4]}}, review_count:{$sum:1}}},
+  {$project:{_id:0, city:"$_id.city", year:"$_id.year", review_count:1}},
+  {$sort:{city:1, year:1}} ]
+\end{lstlisting}
+Returned 53 (city,~year) groups in 2\,ms over 4{,}000 docs. Full-collection aggregation by design---every December review must be counted---so no useful index prefix applies. If \texttt{reviews} grew to 10M+, the first tuning step would be \texttt{reviews \{date:1\}}.
+
+\subsection{Q6 -- Re-book reminder + same-host listings}
+Step~1 (one aggregation): group \texttt{reviews} by \texttt{(city, listing\_id, reviewer\_id)}, keep only groups with \texttt{review\_count$>$1}. Step~2 (per group, in app code, capped at 25): for each prior review date, compute month bounds, then run one \texttt{findOne} on \texttt{calendar} for availability, one aggregate on \texttt{calendar} for min/max nights, one \texttt{findOne} on \texttt{listings} for description+host, and one \texttt{find} on \texttt{listings} for the host's other listings in the same city. Every step-2 read lands on an index already designed in Stage~2: \texttt{city\_1\_listing\_id\_1\_date\_1} for calendar, \texttt{city\_1\_listing\_id\_1} (unique) and \texttt{host\_id\_1\_city\_1} for listings. We did not have to define a single new index for Q6, which is itself a validation of the design.
+
+\section{Critique, Lessons Learned, and Advice}
+
+\textbf{What we'd change.} (1) Date-as-string in Stage~2 was justified on storage grounds; the bigger payoff turned out to be \emph{query simplicity}---Q5's \texttt{\$substr} extraction stays trivial whereas \texttt{\$year}/\texttt{\$month} on \texttt{Date} forces a per-doc compute. (2) The \texttt{host\_id\_1\_city\_1} index has the wrong key order for our actual access pattern; \texttt{\{city,host\_id\}} would share a prefix with three other listings indexes. (3) If we ever needed Q2 frequently, embedding the canonical neighborhood list per city would eliminate a join.
+
+\textbf{Lessons.} \texttt{mongodb-memory-server} shrinks the design loop to seconds and should be the default for prototyping, not Atlas. \texttt{explain('executionStats')} is the single most valuable design-validation tool---one line of \texttt{.explain()} per query turned guessed index usage into proven index usage. Multi-step orchestration in app code (Q6) is much easier to read, debug, and present than a single nested-\texttt{\$lookup} aggregation, and at our scale costs essentially nothing because each per-record read hits an index. Schema design happens at index-design time, not at collection-design time.
+
+\textbf{Advice.} Pick one query first and design every collection and index around it; only then add the second. Start with \texttt{mongodb-memory-server}---no Atlas account on day one. Always commit \texttt{explain} output alongside query results so the reviewer (and future you) can verify the planner is doing what you think.
+
+\section{References}
+
+\begin{enumerate}[label={[\arabic*]}]
+\item MongoDB Documentation. \url{https://www.mongodb.com/docs/manual/}
+\item MongoDB Aggregation Pipeline. \url{https://www.mongodb.com/docs/manual/core/aggregation-pipeline/}
+\item MongoDB Indexes. \url{https://www.mongodb.com/docs/manual/indexes/}
+\item MongoDB \texttt{cursor.explain()}. \url{https://www.mongodb.com/docs/manual/reference/method/cursor.explain/}
+\item \texttt{mongodb-memory-server}. \url{https://github.com/typegoose/mongodb-memory-server}
+\item InsideAirbnb Data Portal. \url{https://insideairbnb.com/get-the-data.html}
+\item Stage~2 Report. \texttt{task3-deliverables/TASK\_3\_Report\_MongoDB\_Airbnb.pdf}.
+\end{enumerate}
+
+\end{document}
