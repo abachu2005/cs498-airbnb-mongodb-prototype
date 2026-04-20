@@ -1,0 +1,35 @@
+[
+  {
+    "listing_id": 99355,
+    "name": "Beautiful Apt near City Center!",
+    "neighborhood": "Irvington",
+    "room_type": "Entire home/apt",
+    "property_type": "Entire rental unit",
+    "accommodates": 6,
+    "price": null,
+    "review_scores_rating": 4.94,
+    "amenities": "[\"Cooking basics\", \"BBQ grill\", \"First aid kit\", \"Garden view\", \"Dishes and silverware\", \"55 inch HDTV with DVD player\", \"Dedicated workspace\", \"Kitchen\", \"Refrigerator\", \"Free parking on premises\", \"Self check-in\", \"Oven\", \"Free street parking\", \"Outdoor furniture\", \"Children\\u2019s books and toys\", \"Outdoor dining area\", \"Microwave\", \"Wifi\", \"Exterior security cameras on property\", \"Essentials\", \"Carbon monoxide alarm\", \"Smoke alarm\", \"Free dryer \\u2013 In building\", \"Long term stays allowed\", \"Iron\", \"Noise decibel monitors on property\", \"Children\\u2019s dinnerware\", \"Shared backyard \\u2013 Fully fenced\", \"Hair dryer\", \"Hangers\", \"Coffee maker\", \"Luggage dropoff allowed\", \"Smart lock\", \"Free washer \\u2013 In building\", \"Outdoor kitchen\", \"Fire pit\", \"Viking gas stove\", \"Crib\", \"Shampoo\", \"Fire extinguisher\", \"Hot water\", \"Central air conditioning\", \"Portable air conditioning\", \"Pack \\u2019n play/Travel crib\", \"Heating\", \"Dishwasher\", \"High chair\"]"
+  },
+  {
+    "listing_id": 67036,
+    "name": "Historic Home Located in Central City",
+    "neighborhood": "Sullivan's Gulch",
+    "room_type": "Entire home/apt",
+    "property_type": "Entire guesthouse",
+    "accommodates": 10,
+    "price": null,
+    "review_scores_rating": 4.93,
+    "amenities": "[\"Cooking basics\", \"First aid kit\", \"Dining table\", \"Keypad\", \"Air conditioning\", \"Stove\", \"Body soap\", \"Garden view\", \"Extra pillows and blankets\", \"Indoor fireplace: gas\", \"TV with standard cable\", \"Dishes and silverware\", \"Private patio or balcony\", \"Kitchen\", \"Refrigerator\", \"Freezer\", \"Ethernet connection\", \"Clothing storage: closet\", \"Free dryer\", \"Oven\", \"Free street parking\", \"Self check-in\", \"Cleaning products\", \"Outdoor furniture\", \"Bathtub\", \"Bed linens\", \"Microwave\", \"Wifi\", \"Essentials\", \"Carbon monoxide alarm\", \"Portable fans\", \"Blender\", \"Smoke alarm\", \"Hot water kettle\", \"Baking sheet\", \"Iron\", \"Hair dryer\", \"Hangers\", \"Coffee maker\", \"Luggage dropoff allowed\", \"Free washer\", \"Fire extinguisher\", \"Shampoo\", \"Toaster\", \"Hot water\", \"Private entrance\", \"Heating\", \"Dishwasher\", \"Books and reading material\"]"
+  },
+  {
+    "listing_id": 93613,
+    "name": "Sunny Queen Room in FUN Alberta Arts",
+    "neighborhood": "Sabin",
+    "room_type": "Private room",
+    "property_type": "Private room in home",
+    "accommodates": 1,
+    "price": null,
+    "review_scores_rating": 4.52,
+    "amenities": "[\"Cooking basics\", \"Dining table\", \"Keypad\", \"Extra pillows and blankets\", \"Dishes and silverware\", \"Dedicated workspace\", \"Kitchen\", \"Refrigerator\", \"Wine glasses\", \"Freezer\", \"Free parking on premises\", \"Self check-in\", \"Free street parking\", \"Free washer \\u2013 In unit\", \"Cleaning products\", \"Other electric stove\", \"Outdoor furniture\", \"Bathtub\", \"Bed linens\", \"Microwave\", \"Single oven\", \"Essentials\", \"Carbon monoxide alarm\", \"Portable fans\", \"Blender\", \"Smoke alarm\", \"Hot water kettle\", \"Fast wifi \\u2013 745 Mbps\", \"Long term stays allowed\", \"Baking sheet\", \"Free dryer \\u2013 In unit\", \"Iron\", \"Hair dryer\", \"Hangers\", \"Coffee maker\", \"Luggage dropoff allowed\", \"Drying rack for clothing\", \"Clothing storage: closet and dresser\", \"Shared patio or balcony\", \"Fire extinguisher\", \"Toaster\", \"Hot water\", \"Heating\", \"Lock on bedroom door\", \"Room-darkening shades\"]"
+  }
+]

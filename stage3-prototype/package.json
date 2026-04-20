@@ -1,0 +1,17 @@
+{
+  "name": "stage3-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/e.js"
+  },
+  "dependencies": {
+    "csv-parse": "^6.2.1",
+    "mongodb": "^7.1.1",
+    "mongodb-memory-server": "^11.0.1"
+  },
+  "devDependencies": {
+    "md-to-pdf": "^5.2.5"
+  }
+}

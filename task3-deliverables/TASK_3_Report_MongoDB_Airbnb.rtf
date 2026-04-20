@@ -1,0 +1,378 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Light;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Task 3 - Data Model and Application Design: MongoDB + AirBnB  \
+Abhinav Bachu, Hanshul Bahl, Alejandra Arias  \
+CS 498 / Data Management in the Cloud  \
+04/01/2026  \
+\
+## 1. Selected Storage System and Dataset\
+\
+We are using **MongoDB** as the storage system and the provided **AirBnB dataset** as the target dataset (Los Angeles, Portland, Salem, and San Diego). The dataset has four core files per city: `listings`, `calendar`, `reviews`, and `neighbourhoods`.\
+\
+For this milestone, the assignment asks for design completeness plus proof that at least some items are loaded. So we designed for the full four-city scope, and loaded a representative subset for proof-of-concept validation.\
+\
+## 2. Data Representation in MongoDB\
+\
+### 2.1 Final representation\
+\
+We model the dataset as four collections so that each source file maps cleanly into its own write path:\
+\
+1. `listings`\
+2. `calendar`\
+3. `reviews`\
+4. `neighborhoods`\
+\
+The key design decision is to keep high-volume time-series data (`calendar`, `reviews`) out of listing documents. It is tempting to embed everything, but that would create very large listing documents and expensive rewrites when availability/reviews update. Keeping these as separate collections gives us better write behavior and clearer index control.\
+\
+Example document shapes:\
+\
+```javascript\
+// listings\
+\{\
+  city: "portland",\
+  listing_id: 37676,\
+  name: "Mt. Hood View in the Pearl District",\
+  neighborhood: "Pearl",\
+  room_type: "Entire home/apt",\
+  accommodates: 4,\
+  property_type: "Apartment",\
+  amenities_raw: "\{TV,Wifi,...\}",\
+  price: 125,\
+  review_scores_rating: 94,\
+  host_id: 162158,\
+  host_name: "Paul",\
+  listing_url: "https://www.airbnb.com/rooms/37676",\
+  description: "..."\
+\}\
+\
+// calendar\
+\{\
+  city: "salem",\
+  listing_id: 199568,\
+  date: "2025-12-30",\
+  available: false,\
+  price: 89,\
+  adjusted_price: 89,\
+  minimum_nights: 4,\
+  maximum_nights: 120\
+\}\
+\
+// reviews\
+\{\
+  city: "san_diego",\
+  listing_id: 123456,\
+  review_id: 987654321,\
+  date: "2024-12-14",\
+  reviewer_id: 45200,\
+  reviewer_name: "Alice",\
+  comments: "Great place..."\
+\}\
+\
+// neighborhoods\
+\{\
+  city: "los_angeles",\
+  neighborhood: "Hollywood"\
+\}\
+```\
+\
+### 2.2 Indexes\
+\
+Indexes are chosen directly from query patterns in the assignment:\
+\
+```javascript\
+db.listings.createIndex(\{ city: 1, listing_id: 1 \}, \{ unique: true \})\
+db.listings.createIndex(\{ city: 1, neighborhood: 1, room_type: 1 \})\
+db.listings.createIndex(\{ host_id: 1, city: 1 \})\
+\
+db.calendar.createIndex(\{ city: 1, listing_id: 1, date: 1 \})\
+db.calendar.createIndex(\{ city: 1, date: 1, available: 1 \})\
+\
+db.reviews.createIndex(\{ city: 1, listing_id: 1, date: 1 \})\
+db.reviews.createIndex(\{ reviewer_id: 1, listing_id: 1, date: 1 \})\
+\
+db.neighborhoods.createIndex(\{ city: 1, neighborhood: 1 \}, \{ unique: true \})\
+```\
+\
+Why these are preferred:\
+- most query filters begin with city and listing id;\
+- availability and monthly trend queries are date-heavy, so date prefixes matter;\
+- query 6 needs reviewer/listing history checks, so reviewer-based index support is important.\
+\
+### 2.3 Alternative representation considered\
+\
+We also considered a denormalized model where each `listings` document embeds:\
+- a large `calendar` array of daily availability entries, and\
+- a `reviews` subdocument array.\
+\
+That alternative can make some listing-centric reads simpler (single-document fetch), but it is weaker for this assignment because:\
+- `calendar` is large and update-heavy; embedded arrays can push document size and rewrite costs;\
+- monthly and city-wide analytics become array-unwind heavy;\
+- index flexibility is reduced compared to separate collections with targeted compound indexes.\
+\
+So the final design keeps `calendar` and `reviews` external, and uses indexed joins (`$lookup`) only when needed.\
+\
+## 3. Data Restructuring, Cleaning, and Loading Plan\
+\
+### 3.1 Restructuring and cleaning\
+\
+The source files are CSV/CSV.GZ and include mixed formatting. Before loading:\
+\
+1. Normalize city labels to canonical keys (`los_angeles`, `portland`, `salem`, `san_diego`).\
+2. Convert numeric fields:\
+   - `price`, `adjusted_price` from currency strings to numeric\
+   - `minimum_nights`, `maximum_nights`, `accommodates`, IDs to integers\
+3. Convert availability flag:\
+   - `t/f` to boolean\
+4. Parse and preserve dates as ISO-like strings first; convert to `Date` at load/query time if needed for strict date arithmetic.\
+5. Keep only fields required by current and expected queries to reduce write and storage overhead.\
+6. Drop/flag malformed records (missing listing id, malformed date, invalid city).\
+\
+### 3.2 Loading process\
+\
+For this part we implemented a reproducible proof-of-concept loader:\
+\
+- Script: `task3-deliverables/scripts/load_and_capture.js`\
+- It reads representative records from all required cities and all required entities.\
+- It creates the collections, inserts sample records, and creates indexes.\
+- It writes load evidence to `task3-deliverables/assets/mongo_load_output.txt`.\
+\
+Loaded sample counts in this run:\
+- `listings`: 160\
+- `reviews`: 160\
+- `neighborhoods`: 83\
+- `calendar`: 300\
+\
+This satisfies the milestone requirement to show data loaded while keeping ingestion time small for design iteration.\
+\
+## 4. Query Implementation Strategies (All Six Queries)\
+\
+The pseudocode below is implementation-oriented and mapped to MongoDB operators/indexes.\
+\
+### 4.1 Query 1 - AirBnB search (Portland, 2-day period, sorted by average rating)\
+\
+Goal: listings available for both days in a requested 2-day window, with listing details, sorted by rating desc.\
+\
+```javascript\
+// Inputs: startDate, endDate (2-day period)\
+// Indexes used: calendar \{city, listing_id, date\}, listings \{city, listing_id\}\
+\
+candidateListings = db.calendar.aggregate([\
+  \{ $match: \{\
+      city: "portland",\
+      date: \{ $in: [startDate, endDate] \},\
+      available: true\
+  \}\},\
+  // ensure both dates are available\
+  \{ $group: \{\
+      _id: "$listing_id",\
+      availableDays: \{ $sum: 1 \}\
+  \}\},\
+  \{ $match: \{ availableDays: 2 \} \}\
+])\
+\
+db.listings.aggregate([\
+  \{ $match: \{ city: "portland", listing_id: \{ $in: candidateListings._id \} \} \},\
+  \{ $project: \{\
+      _id: 0, name: 1, neighborhood: 1, room_type: 1, accommodates: 1,\
+      property_type: 1, amenities_raw: 1, price: 1, review_scores_rating: 1\
+  \}\},\
+  \{ $sort: \{ review_scores_rating: -1 \} \}\
+])\
+```\
+\
+### 4.2 Query 2 - Neighborhoods with no listings for a given month\
+\
+Goal: for all cities, find neighborhoods with zero active listings in a target month.\
+\
+```javascript\
+// Inputs: monthStart, monthEnd\
+// Indexes: neighborhoods \{city, neighborhood\}, calendar \{city, listing_id, date\}, listings \{city, listing_id\}\
+\
+activeNeighborhoods = db.calendar.aggregate([\
+  \{ $match: \{\
+      date: \{ $gte: monthStart, $lte: monthEnd \},\
+      available: true\
+  \}\},\
+  \{ $group: \{ _id: \{ city: "$city", listing_id: "$listing_id" \} \} \},\
+  \{ $lookup: \{\
+      from: "listings",\
+      let: \{ c: "$_id.city", l: "$_id.listing_id" \},\
+      pipeline: [\
+        \{ $match: \{ $expr: \{ $and: [\
+          \{ $eq: ["$city", "$$c"] \},\
+          \{ $eq: ["$listing_id", "$$l"] \}\
+        ]\}\}\},\
+        \{ $project: \{ neighborhood: 1, _id: 0 \} \}\
+      ],\
+      as: "listingInfo"\
+  \}\},\
+  \{ $unwind: "$listingInfo" \},\
+  \{ $group: \{ _id: \{ city: "$_id.city", neighborhood: "$listingInfo.neighborhood" \} \} \}\
+])\
+\
+db.neighborhoods.aggregate([\
+  \{ $project: \{ _id: 0, city: 1, neighborhood: 1 \} \},\
+  \{ $match: \{ $expr: \{ $not: \{ $in: [ \{ city: "$city", neighborhood: "$neighborhood" \}, activeNeighborhoods._id ] \} \} \} \}\
+])\
+```\
+\
+### 4.3 Query 3 - Salem "Entire home/apt" availability periods by month\
+\
+Goal: detect contiguous bookable intervals that satisfy per-day minimum nights.\
+\
+```javascript\
+// Inputs: targetMonthStart, targetMonthEnd\
+// Indexes: listings \{city, neighborhood,room_type\} (city+room_type filter),\
+//          calendar \{city, listing_id, date\}\
+\
+listingIds = db.listings.find(\
+  \{ city: "salem", room_type: "Entire home/apt" \},\
+  \{ listing_id: 1, name: 1, _id: 0 \}\
+).toArray()\
+\
+rows = db.calendar.find(\
+  \{\
+    city: "salem",\
+    listing_id: \{ $in: listingIds \},\
+    date: \{ $gte: targetMonthStart, $lte: targetMonthEnd \}\
+  \},\
+  \{ listing_id: 1, date: 1, available: 1, minimum_nights: 1, _id: 0 \}\
+).sort(\{ listing_id: 1, date: 1 \}).toArray()\
+\
+// Post-processing per listing:\
+// 1) scan consecutive available=true runs\
+// 2) for each day in a run, keep day only if runLengthFromThatDay >= minimum_nights(day)\
+// 3) merge remaining valid days into [from,to] ranges\
+// 4) output listing name, month, from-to, min_nights\
+```\
+\
+Comment: this query has sequence logic that is awkward to express purely in aggregation; a hybrid approach (indexed fetch + application pass) is clearer and easier to validate.\
+\
+### 4.4 Query 4 - Booking trend by month (Portland, March-August)\
+\
+Goal: total bookable nights per month for Portland "Entire home/apt", reusing query-3 availability logic.\
+\
+```javascript\
+// Inputs: year, months = [03..08]\
+// Reuse indexed fetch + run segmentation logic from Query 3\
+\
+for each month in [03..08]:\
+  validIntervals = computeBookableIntervals(city="portland", roomType="Entire home/apt", month)\
+  // Sum lengths of all valid intervals\
+  totalBookableNights[month] = sum(interval.to - interval.from + 1)\
+\
+return [\{month, totalBookableNights\}, ...]\
+```\
+\
+Operationally, we keep the interval computation in one reusable function so query 4 is just a loop and aggregation over query-3-style outputs.\
+\
+### 4.5 Query 5 - Booking trend by city: number of reviews in each December\
+\
+Goal: for each city, count reviews during December grouped by year.\
+\
+```javascript\
+// Indexes: reviews \{city, listing_id, date\}\
+\
+db.reviews.aggregate([\
+  // convert date string to date if needed\
+  \{ $addFields: \{ d: \{ $toDate: "$date" \} \} \},\
+  \{ $match: \{ $expr: \{ $eq: [ \{ $month: "$d" \}, 12 ] \} \} \},\
+  \{ $group: \{\
+      _id: \{\
+        city: "$city",\
+        year: \{ $year: "$d" \}\
+      \},\
+      review_count: \{ $sum: 1 \}\
+  \}\},\
+  \{ $sort: \{ "_id.city": 1, "_id.year": 1 \} \}\
+])\
+```\
+\
+### 4.6 Query 6 - Reminder to book again + other listings by same host in same city\
+\
+Goal: find reviewer/listing pairs with multiple reviews, check if listing is available in the same month as previous review, and include host's other city listings.\
+\
+```javascript\
+// Indexes: reviews \{reviewer_id, listing_id, date\}, calendar \{city, listing_id, date\},\
+//          listings \{host_id, city\}, listings \{city, listing_id\}\
+\
+repeatReviews = db.reviews.aggregate([\
+  \{ $match: \{ reviewer_id: \{ $ne: null \} \} \},\
+  \{ $addFields: \{ d: \{ $toDate: "$date" \} \} \},\
+  \{ $group: \{\
+      _id: \{ city: "$city", listing_id: "$listing_id", reviewer_id: "$reviewer_id" \},\
+      review_dates: \{ $push: "$d" \},\
+      review_count: \{ $sum: 1 \}\
+  \}\},\
+  \{ $match: \{ review_count: \{ $gt: 1 \} \} \}\
+])\
+\
+for each group in repeatReviews:\
+  for each priorReviewDate in group.review_dates:\
+    monthStart, monthEnd = monthBounds(priorReviewDate)\
+\
+    wasAvailable = db.calendar.findOne(\{\
+      city: group._id.city,\
+      listing_id: group._id.listing_id,\
+      date: \{ $gte: monthStart, $lte: monthEnd \},\
+      available: true\
+    \}) != null\
+\
+    listing = db.listings.findOne(\{ city: group._id.city, listing_id: group._id.listing_id \})\
+\
+    otherListings = db.listings.find(\{\
+      city: listing.city,\
+      host_id: listing.host_id,\
+      listing_id: \{ $ne: listing.listing_id \}\
+    \}, \{ name: 1, listing_url: 1, _id: 0 \}).toArray()\
+\
+    emit(\{\
+      listing_name: listing.name,\
+      listing_url: listing.listing_url,\
+      description: listing.description,\
+      host_name: listing.host_name,\
+      reviewer_id: group._id.reviewer_id,\
+      previously_booked: true,\
+      month: YYYY_MM(priorReviewDate),\
+      min_nights: lookupMonthMinNights(listing.city, listing.listing_id, monthStart, monthEnd),\
+      max_nights: lookupMonthMaxNights(listing.city, listing.listing_id, monthStart, monthEnd),\
+      available_in_same_month: wasAvailable,\
+      other_host_listings_same_city: otherListings\
+    \})\
+```\
+\
+## 5. Screenshot Proof of Data Load\
+\
+A screenshot of loaded records and collection counts is included here:\
+\
+![MongoDB load proof](assets/mongo_load_screenshot.png)\
+\
+Source transcript used for the screenshot:\
+- `task3-deliverables/assets/mongo_load_output.txt`\
+\
+## 6. Notes on Implementation Readiness\
+\
+This design is intentionally "Part 2 ready, Part 3 friendly":\
+- it keeps the schema simple enough to implement quickly;\
+- it includes explicit index support for all six required queries;\
+- it isolates complex booking-window logic into reusable code so we can test it independently;\
+- and it avoids irreversible over-denormalization early in the project.\
+\
+If we observe bottlenecks in Part 3, the first tuning step would be precomputing monthly availability segments into a derived collection (materialized view style) to speed up queries 3 and 4.\
+\
+## 7. References\
+\
+1. MongoDB Documentation. https://www.mongodb.com/docs/manual/  \
+2. MongoDB Aggregation Pipeline. https://www.mongodb.com/docs/manual/core/aggregation-pipeline/  \
+3. MongoDB Indexes. https://www.mongodb.com/docs/manual/indexes/  \
+4. MongoDB Data Modeling. https://www.mongodb.com/docs/manual/core/data-model-design/  \
+5. MongoDB `$lookup`. https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/  \
+6. MongoDB Query Operators. https://www.mongodb.com/docs/manual/reference/operator/query/  \
+7. InsideAirbnb Data Portal. https://insideairbnb.com/get-the-data.html  \
+8. AirBnB Assignment Query Document. `/Users/abhinavbachu/Downloads/PT2/AirBnB-info-questions.pdf`  \
+\
+}

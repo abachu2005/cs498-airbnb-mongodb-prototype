@@ -1,0 +1,267 @@
+[
+  {
+    "review_count": 1,
+    "city": "los_angeles",
+    "year": "2009"
+  },
+  {
+    "review_count": 3,
+    "city": "los_angeles",
+    "year": "2011"
+  },
+  {
+    "review_count": 4,
+    "city": "los_angeles",
+    "year": "2012"
+  },
+  {
+    "review_count": 5,
+    "city": "los_angeles",
+    "year": "2013"
+  },
+  {
+    "review_count": 6,
+    "city": "los_angeles",
+    "year": "2014"
+  },
+  {
+    "review_count": 9,
+    "city": "los_angeles",
+    "year": "2015"
+  },
+  {
+    "review_count": 4,
+    "city": "los_angeles",
+    "year": "2017"
+  },
+  {
+    "review_count": 7,
+    "city": "los_angeles",
+    "year": "2018"
+  },
+  {
+    "review_count": 7,
+    "city": "los_angeles",
+    "year": "2019"
+  },
+  {
+    "review_count": 1,
+    "city": "los_angeles",
+    "year": "2020"
+  },
+  {
+    "review_count": 3,
+    "city": "los_angeles",
+    "year": "2021"
+  },
+  {
+    "review_count": 6,
+    "city": "los_angeles",
+    "year": "2022"
+  },
+  {
+    "review_count": 1,
+    "city": "los_angeles",
+    "year": "2023"
+  },
+  {
+    "review_count": 3,
+    "city": "los_angeles",
+    "year": "2024"
+  },
+  {
+    "review_count": 2,
+    "city": "portland",
+    "year": "2010"
+  },
+  {
+    "review_count": 4,
+    "city": "portland",
+    "year": "2012"
+  },
+  {
+    "review_count": 2,
+    "city": "portland",
+    "year": "2013"
+  },
+  {
+    "review_count": 2,
+    "city": "portland",
+    "year": "2015"
+  },
+  {
+    "review_count": 7,
+    "city": "portland",
+    "year": "2016"
+  },
+  {
+    "review_count": 5,
+    "city": "portland",
+    "year": "2017"
+  },
+  {
+    "review_count": 3,
+    "city": "portland",
+    "year": "2018"
+  },
+  {
+    "review_count": 6,
+    "city": "portland",
+    "year": "2019"
+  },
+  {
+    "review_count": 2,
+    "city": "portland",
+    "year": "2020"
+  },
+  {
+    "review_count": 8,
+    "city": "portland",
+    "year": "2021"
+  },
+  {
+    "review_count": 1,
+    "city": "portland",
+    "year": "2022"
+  },
+  {
+    "review_count": 3,
+    "city": "portland",
+    "year": "2023"
+  },
+  {
+    "review_count": 3,
+    "city": "portland",
+    "year": "2024"
+  },
+  {
+    "review_count": 1,
+    "city": "salem",
+    "year": "2011"
+  },
+  {
+    "review_count": 2,
+    "city": "salem",
+    "year": "2013"
+  },
+  {
+    "review_count": 1,
+    "city": "salem",
+    "year": "2014"
+  },
+  {
+    "review_count": 3,
+    "city": "salem",
+    "year": "2015"
+  },
+  {
+    "review_count": 7,
+    "city": "salem",
+    "year": "2016"
+  },
+  {
+    "review_count": 8,
+    "city": "salem",
+    "year": "2017"
+  },
+  {
+    "review_count": 9,
+    "city": "salem",
+    "year": "2018"
+  },
+  {
+    "review_count": 8,
+    "city": "salem",
+    "year": "2019"
+  },
+  {
+    "review_count": 1,
+    "city": "salem",
+    "year": "2020"
+  },
+  {
+    "review_count": 4,
+    "city": "salem",
+    "year": "2021"
+  },
+  {
+    "review_count": 1,
+    "city": "salem",
+    "year": "2023"
+  },
+  {
+    "review_count": 4,
+    "city": "san_diego",
+    "year": "2010"
+  },
+  {
+    "review_count": 2,
+    "city": "san_diego",
+    "year": "2011"
+  },
+  {
+    "review_count": 5,
+    "city": "san_diego",
+    "year": "2012"
+  },
+  {
+    "review_count": 6,
+    "city": "san_diego",
+    "year": "2013"
+  },
+  {
+    "review_count": 8,
+    "city": "san_diego",
+    "year": "2014"
+  },
+  {
+    "review_count": 2,
+    "city": "san_diego",
+    "year": "2015"
+  },
+  {
+    "review_count": 6,
+    "city": "san_diego",
+    "year": "2016"
+  },
+  {
+    "review_count": 5,
+    "city": "san_diego",
+    "year": "2017"
+  },
+  {
+    "review_count": 3,
+    "city": "san_diego",
+    "year": "2018"
+  },
+  {
+    "review_count": 1,
+    "city": "san_diego",
+    "year": "2019"
+  },
+  {
+    "review_count": 1,
+    "city": "san_diego",
+    "year": "2020"
+  },
+  {
+    "review_count": 8,
+    "city": "san_diego",
+    "year": "2021"
+  },
+  {
+    "review_count": 3,
+    "city": "san_diego",
+    "year": "2022"
+  },
+  {
+    "review_count": 1,
+    "city": "san_diego",
+    "year": "2023"
+  },
+  {
+    "review_count": 1,
+    "city": "san_diego",
+    "year": "2024"
+  }
+]

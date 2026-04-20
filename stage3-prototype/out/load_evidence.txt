@@ -1,0 +1,132 @@
+$ npm start  (mongodb-memory-server)
+
+Connected DB: airbnb_stage3
+
+Collection counts (loaded subset):
+  listings:       1780
+  reviews:        4000
+  neighborhoods:  411
+  calendar:       8000
+
+Q1 demo dates picked from data: 2025-12-04 -> 2025-12-05
+
+Sample listings (Portland):
+{
+  "listing_id": 37676,
+  "name": "Mt. Hood View in the Pearl District",
+  "neighborhood": "Pearl",
+  "room_type": "Entire home/apt",
+  "price": null,
+  "host_name": "Paul",
+  "review_scores_rating": 4.89
+}
+{
+  "listing_id": 61893,
+  "name": "Perfect Portland Place",
+  "neighborhood": "Goose Hollow",
+  "room_type": "Entire home/apt",
+  "price": null,
+  "host_name": "Matt",
+  "review_scores_rating": 5
+}
+{
+  "listing_id": 67036,
+  "name": "Historic Home Located in Central City",
+  "neighborhood": "Sullivan's Gulch",
+  "room_type": "Entire home/apt",
+  "price": null,
+  "host_name": "Will",
+  "review_scores_rating": 4.93
+}
+
+Sample calendar rows (Salem):
+{
+  "city": "salem",
+  "listing_id": 199568,
+  "date": "2025-12-28",
+  "available": false,
+  "price": null,
+  "adjusted_price": null,
+  "minimum_nights": 4,
+  "maximum_nights": 120
+}
+{
+  "city": "salem",
+  "listing_id": 199568,
+  "date": "2025-12-29",
+  "available": false,
+  "price": null,
+  "adjusted_price": null,
+  "minimum_nights": 4,
+  "maximum_nights": 120
+}
+{
+  "city": "salem",
+  "listing_id": 199568,
+  "date": "2025-12-30",
+  "available": false,
+  "price": null,
+  "adjusted_price": null,
+  "minimum_nights": 4,
+  "maximum_nights": 120
+}
+
+Sample reviews (San Diego):
+{
+  "city": "san_diego",
+  "listing_id": 6,
+  "review_id": 8,
+  "date": "2008-06-22",
+  "reviewer_id": 415,
+  "reviewer_name": "Terrence"
+}
+{
+  "city": "san_diego",
+  "listing_id": 6,
+  "review_id": 4383,
+  "date": "2009-06-22",
+  "reviewer_id": 3762,
+  "reviewer_name": "Christine"
+}
+{
+  "city": "san_diego",
+  "listing_id": 6,
+  "review_id": 1722383,
+  "date": "2012-07-16",
+  "reviewer_id": 1864778,
+  "reviewer_name": "Hieu"
+}
+
+Sample neighborhoods (Los Angeles):
+{
+  "city": "los_angeles",
+  "neighborhood": "Adams-Normandie"
+}
+{
+  "city": "los_angeles",
+  "neighborhood": "Agoura Hills"
+}
+{
+  "city": "los_angeles",
+  "neighborhood": "Alhambra"
+}
+{
+  "city": "los_angeles",
+  "neighborhood": "Arcadia"
+}
+
+Indexes on listings:
+  { city, listing_id } [unique]
+  { city, neighborhood, room_type }
+  { host_id, city }
+
+Indexes on calendar:
+  { city, listing_id, date }
+  { city, date, available }
+
+Indexes on reviews:
+  { city, listing_id, date }
+  { reviewer_id, listing_id, date }
+
+Indexes on neighborhoods:
+  { city, neighborhood } [unique]

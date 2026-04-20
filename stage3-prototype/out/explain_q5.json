@@ -1,0 +1,212 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb_stage3.reviews",
+          "parsedQuery": {
+            "date": {
+              "$regex": "^\\d{4}-12-\\d{2}$"
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "5DB7EA7B",
+          "planCacheKey": "C6E922D7",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "city": 1,
+              "date": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "date": {
+                  "$regex": "^\\d{4}-12-\\d{2}$"
+                }
+              },
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 209,
+          "executionTimeMillis": 1,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 4000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 209,
+            "executionTimeMillisEstimate": 0,
+            "works": 4001,
+            "advanced": 209,
+            "needTime": 3791,
+            "needYield": 0,
+            "saveState": 3,
+            "restoreState": 3,
+            "isEOF": 1,
+            "transformBy": {
+              "city": 1,
+              "date": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "date": {
+                  "$regex": "^\\d{4}-12-\\d{2}$"
+                }
+              },
+              "nReturned": 209,
+              "executionTimeMillisEstimate": 0,
+              "works": 4001,
+              "advanced": 209,
+              "needTime": 3791,
+              "needYield": 0,
+              "saveState": 3,
+              "restoreState": 3,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 4000
+            }
+          }
+        }
+      },
+      "nReturned": 209,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$group": {
+        "_id": {
+          "city": "$city",
+          "year": {
+            "$substrBytes": [
+              "$date",
+              {
+                "$const": 0
+              },
+              {
+                "$const": 4
+              }
+            ]
+          }
+        },
+        "review_count": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "review_count": 7208
+      },
+      "totalOutputDataSizeBytes": 25970,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 53,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$project": {
+        "review_count": true,
+        "city": "$_id.city",
+        "year": "$_id.year",
+        "_id": false
+      },
+      "nReturned": 53,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "city": 1,
+          "year": 1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 18921,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 53,
+      "executionTimeMillisEstimate": 1
+    }
+  ],
+  "serverInfo": {
+    "host": "wirelessprv-10-193-133-216.near.illinois.edu",
+    "port": 52397,
+    "version": "8.0.3",
+    "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "reviews",
+    "pipeline": [
+      {
+        "$match": {
+          "date": {
+            "$regex": {}
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "city": "$city",
+            "year": {
+              "$substr": [
+                "$date",
+                0,
+                4
+              ]
+            }
+          },
+          "review_count": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": 0,
+          "city": "$_id.city",
+          "year": "$_id.year",
+          "review_count": 1
+        }
+      },
+      {
+        "$sort": {
+          "city": 1,
+          "year": 1
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb_stage3"
+  },
+  "ok": 1
+}
