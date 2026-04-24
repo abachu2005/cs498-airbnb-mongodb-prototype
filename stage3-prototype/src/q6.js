@@ -1,3 +1,10 @@
+// q6: re-book reminders -- for every (city, listing, reviewer) the same guest reviewed twice+,
+// surface the listing, the host's other listings in the same city, and current calendar status
+// designed as one aggregation + a small batch of indexed point reads per row, NOT one giant
+// nested $lookup pipeline -- the latter blows out memory on 3M reviews and is harder to explain
+
+// stage 1: pull every (city, listing, reviewer) combo with >1 review
+// hits the (reviewer_id, listing_id, date) index prefix
 function repeatPipe() {
   return [
     { $match: { reviewer_id: { $ne: null } } },
@@ -13,6 +20,7 @@ function repeatPipe() {
   ];
 }
 
+// review date "YYYY-MM-DD" -> [first, last] of that month; same -31 trick as q2/q3
 function mb(d) {
   const a = d.substring(0, 7);
   const b = `${a}-01`;
@@ -25,19 +33,24 @@ async function run(db, o) {
   const b = [];
   const c = o && o.limit ? o.limit : 25;
 
+  // per repeat-pair: 4 indexed reads max (listing point lookup, calendar day check,
+  // calendar min/max aggregate, same-host listings find) -- cheap because each is index-driven
   for (const g of a) {
     if (b.length >= c) break;
 
+    // listing point lookup via unique (city, listing_id) index
     const h = await db.collection("listings").findOne(
       { city: g._id.city, listing_id: g._id.listing_id },
       { projection: { _id: 0, name: 1, listing_url: 1, description: 1, host_id: 1, host_name: 1 } }
     );
     if (!h) continue;
 
+    // one reminder row per review-date this guest left -- preserves the time dimension
     for (const d of g.review_dates) {
       if (!d) continue;
       const [s, e] = mb(d);
 
+      // any availability in the same month as the review? hits the (city, listing_id, date) index
       const k = await db.collection("calendar").findOne({
         city: g._id.city,
         listing_id: g._id.listing_id,
@@ -45,6 +58,7 @@ async function run(db, o) {
         available: true,
       });
 
+      // pull min/max stay rules from the same calendar window for display
       const m = await db
         .collection("calendar")
         .aggregate([
@@ -53,6 +67,8 @@ async function run(db, o) {
         ])
         .toArray();
 
+      // host's OTHER listings in the same city, capped at 10 for display
+      // uses the (host_id, city) index -- key order critiqued in the report (city should come first)
       const q = await db
         .collection("listings")
         .find(
@@ -83,6 +99,7 @@ async function run(db, o) {
   return b;
 }
 
+// explain only the headline aggregation -- the per-row point reads are tracked by their own indexes
 async function explain(db) {
   return db.collection("reviews").aggregate(repeatPipe()).explain("executionStats");
 }

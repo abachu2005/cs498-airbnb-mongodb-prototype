@@ -1,13 +1,21 @@
+// frontend: vanilla JS, no framework -- the entire app is one DOM tree + 6 fetch handlers
+// each Q has a runQ + renderQ pair: runQ fires the API call, renderQ paints the result panel
+// W tracks which tabs have been visited so we don't re-query on every tab click
+
+// $ / $$ are 4-char shortcuts for querySelector / querySelectorAll, used everywhere
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 
+// number formatter, "—" for null/undefined, locale-grouped commas otherwise
 const F = (n) => (n == null ? "—" : n.toLocaleString());
 
+// html-escape user-controlled strings before injecting into innerHTML (xss guard)
 function esc(s) {
   if (s == null) return "";
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+// snake_case city tag -> "Title Case", used for headers since the DB stores cities as e.g. "san_diego"
 function pretty(s) {
   if (!s) return "";
   return String(s)
@@ -16,6 +24,7 @@ function pretty(s) {
     .join(" ");
 }
 
+// amenities are stored as a stringified JSON array, parse + cap at 4 for badge display
 function ams(a) {
   if (!a) return [];
   try {
@@ -27,6 +36,7 @@ function ams(a) {
 
 let H = null;
 
+// boot poll: hammer /api/health every 800ms until the loader finishes, then unhide the UI
 async function poll() {
   try {
     const r = await fetch("/api/health");
@@ -44,6 +54,8 @@ async function poll() {
   setTimeout(poll, 800);
 }
 
+// once data is loaded: hide boot overlay, fill the per-collection counts in the topbar,
+// seed Q1/Q2/Q3 placeholder dates from the demo defaults the server pre-picked, then auto-run Q1
 function onReady(j) {
   $("#boot").classList.add("is-hidden");
   if (j.counts) {
@@ -68,6 +80,8 @@ function onReady(j) {
   runQ1();
 }
 
+// tab switching + lazy-run-on-first-click
+// W is the "have we already run this tab once" flag set; auto-runs only on FIRST visit
 $$(".tab").forEach((b) =>
   b.addEventListener("click", () => {
     const t = b.dataset.tab;
@@ -81,6 +95,7 @@ $$(".tab").forEach((b) =>
   })
 );
 
+// "have we run this tab at least once" -- prevents re-firing the (slow) Q5/Q6 query on every click
 const W = { q2: false, q3: false, q4: false, q5: false, q6: false };
 
 $("#q1-form").addEventListener("submit", (e) => {
@@ -99,6 +114,7 @@ $("#q4-run").addEventListener("click", runQ4);
 $("#q5-run").addEventListener("click", runQ5);
 $("#q6-run").addEventListener("click", runQ6);
 
+// q1: highest-rated listings open for two consecutive nights -- airbnb-card style grid
 async function runQ1() {
   const c = $("#q1-city").value;
   const a = $("#q1-from").value;
@@ -172,6 +188,7 @@ function renderQ1(j) {
     <div class="grid">${g}</div>`;
 }
 
+// q5: december reviews per (city, year) -- expensive collection scan, show a spinner up front
 async function runQ5() {
   W.q5 = true;
   const o = $("#q5-results");
@@ -232,6 +249,7 @@ function renderQ5(j) {
     <div class="cities">${blocks}</div>`;
 }
 
+// q6: re-book reminders -- one card per repeat-reviewer/listing pair, with same-host listings sidecar
 async function runQ6() {
   W.q6 = true;
   const l = $("#q6-limit").value || 12;
@@ -247,6 +265,7 @@ async function runQ6() {
   }
 }
 
+// description fields can contain raw html (insideairbnb's listing pages), nuke tags for safe display
 function strip(h) {
   return String(h || "")
     .replace(/<br\s*\/?>/gi, " ")
@@ -301,6 +320,7 @@ function renderQ6(j) {
     <div class="reminders">${html}</div>`;
 }
 
+// q2: empty neighborhoods -- shows the "dark" set as badges plus a one-line summary bar
 async function runQ2() {
   W.q2 = true;
   const c = $("#q2-city").value;
@@ -339,6 +359,7 @@ function renderQ2(j) {
     <div class="badges" style="margin-top:14px">${tiles}</div>`;
 }
 
+// q3: salem entire-home bookable windows -- one card per listing, intervals listed inside
 async function runQ3() {
   W.q3 = true;
   const c = $("#q3-city").value;
@@ -357,6 +378,7 @@ async function runQ3() {
   }
 }
 
+// inclusive night count for an interval (matches the totalNights helper in q4.js)
 function nightsBetween(a, b) {
   const x = new Date(`${a}T00:00:00Z`).getTime();
   const y = new Date(`${b}T00:00:00Z`).getTime();
@@ -402,6 +424,7 @@ function renderQ3(j) {
     ${a.length > limited.length ? `<div class="hint" style="margin-top:14px">Showing first ${limited.length} of ${F(a.length)} listings.</div>` : ""}`;
 }
 
+// q4: portland mar-aug bookable-nights trend, rendered as horizontal bar chart per month
 async function runQ4() {
   W.q4 = true;
   const o = $("#q4-results");

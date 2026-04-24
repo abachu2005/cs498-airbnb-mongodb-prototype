@@ -1,7 +1,15 @@
+// q3: for each entire-home listing in <city>, find every bookable interval inside <month>
+// "bookable" is stricter than "available": each day in the run must have enough remaining
+// consecutive available days to satisfy that day's minimum_nights (host's stay-length rule)
+// runs the interval scanner in app code -- mongo can't express this with aggregation alone
+
+// month string "YYYY-MM" -> [first, last] inclusive bounds; same trick as q2 (-31 always safe)
 function mb(m) {
   return [`${m}-01`, `${m}-31`];
 }
 
+// true iff b is the calendar day immediately after a
+// guards against gaps in the calendar (insideairbnb sometimes skips a day for a listing)
 function nx(a, b) {
   if (!a || !b) return false;
   const x = new Date(`${a}T00:00:00Z`);
@@ -9,6 +17,12 @@ function nx(a, b) {
   return y.getTime() - x.getTime() === 86400000;
 }
 
+// core scanner: walk a listing's sorted calendar rows, output [{from, to, min_nights}]
+// algorithm:
+//   1) skip unavailable days
+//   2) j = end of the current run of consecutive available days
+//   3) inside that run, keep day k only if remaining length (j-k) >= that day's min_nights
+//   4) collapse adjacent kept days back into [from, to] ranges
 function intervals(r) {
   const o = [];
   let i = 0;
@@ -19,12 +33,14 @@ function intervals(r) {
     }
     let j = i + 1;
     while (j < r.length && r[j].available && nx(r[j - 1].date, r[j].date)) j++;
+    // v = indices of days within [i, j) that pass the min-nights test
     const v = [];
     for (let k = i; k < j; k++) {
       const m = j - k;
       const n = r[k].minimum_nights || 1;
       if (m >= n) v.push(k);
     }
+    // s/p track the start/end indices of the current "kept" run as we collapse
     let s = -1;
     let p = -1;
     for (let k = 0; k < v.length; k++) {
@@ -46,6 +62,7 @@ function intervals(r) {
   return o;
 }
 
+// candidate listings narrowed by the (city, neighborhood, room_type) index prefix on (city, room_type)
 async function listingsFor(db, c, t) {
   return db
     .collection("listings")
@@ -63,6 +80,8 @@ async function run(db, o) {
   const b = a.map((x) => x.listing_id);
   if (!b.length) return [];
 
+  // single bulk read of every relevant calendar row, sorted so the scanner can walk in order
+  // hits the (city, listing_id, date) index, projection keeps doc size small
   const k = await db
     .collection("calendar")
     .find(
@@ -72,6 +91,7 @@ async function run(db, o) {
     .sort({ listing_id: 1, date: 1 })
     .toArray();
 
+  // bucket calendar rows by listing so the scanner operates on each listing in isolation
   const g = new Map();
   for (const r of k) {
     if (!g.has(r.listing_id)) g.set(r.listing_id, []);
@@ -86,10 +106,12 @@ async function run(db, o) {
     if (!iv.length) continue;
     out.push({ listing_id: l.listing_id, listing_name: l.name, month: m, intervals: iv });
   }
+  // most-bookable listings first, listing_id as tiebreaker for determinism
   out.sort((p, q) => q.intervals.length - p.intervals.length || p.listing_id - q.listing_id);
   return out;
 }
 
+// explain only the indexed candidate-fetch step; the interval scanner is app-side and not pipelined
 async function explain(db, o) {
   const c = o.city;
   const t = o.room_type || "Entire home/apt";

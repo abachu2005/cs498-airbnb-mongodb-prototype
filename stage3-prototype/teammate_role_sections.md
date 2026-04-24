@@ -32,16 +32,16 @@ consistent.
 
 I led query development and performance analysis for the prototype. I implemented
 four of the six production queries: Q3 (Salem entire-home availability windows)
-in \texttt{src/h.js}, where I designed the application-side interval scanner that
+in \texttt{src/q3.js}, where I designed the application-side interval scanner that
 walks each listing's calendar and excludes ``available'' days that aren't
 actually bookable because the remaining run is shorter than that day's
 \texttt{minimum\_nights}; Q4 (Portland March--August booking trend) in
-\texttt{src/i.js}, which composes Q3's scanner across the six target months and
+\texttt{src/q4.js}, which composes Q3's scanner across the six target months and
 sums total bookable nights per month; Q5 (December reviews per city per year) in
-\texttt{src/c.js}, where I chose the regex + \texttt{\$substr} extraction
+\texttt{src/q5.js}, where I chose the regex + \texttt{\$substr} extraction
 approach over a true \texttt{Date} type so that the year/month split stays
 trivial and prefix-indexable; and Q6 (re-book reminder + same-host listings)
-in \texttt{src/d.js}, where I designed the multi-step orchestration that
+in \texttt{src/q6.js}, where I designed the multi-step orchestration that
 decomposes the query into one \texttt{reviews} aggregation followed by a small
 batch of indexed point reads against \texttt{calendar} and \texttt{listings}
 rather than a single deeply-nested \texttt{\$lookup} pipeline. I also owned the
@@ -77,7 +77,7 @@ disguise. That meant reviewing the loader output
 \texttt{neighborhoods} unique constraint held across all four cities under the
 full-data load, and that all eight indexes built successfully in every run. On
 the query side I implemented Q2 (empty neighborhoods in a given month) in
-\texttt{src/g.js}, where I had to think carefully about the anti-join: the
+\texttt{src/q2.js}, where I had to think carefully about the anti-join: the
 ``positive'' aggregation over \texttt{calendar} returns active neighborhoods,
 and the answer is the set complement against the full \texttt{neighborhoods}
 collection. I chose to compute the diff in application code rather than via a
@@ -103,10 +103,10 @@ design-time guesses.
 
 | Area                                            | Owner      | Evidence in repo                                           |
 | ----------------------------------------------- | ---------- | ---------------------------------------------------------- |
-| `src/a.js` loader, `src/e.js` driver, Q1 (`src/b.js`), `web/` UI | Abhinav    | `out/load_evidence.txt`, `out/q1_results.json`, `web/server.js` |
-| Q3 (`src/h.js`), Q4 (`src/i.js`), Q5 (`src/c.js`), Q6 (`src/d.js`), explain plans | Hanshul    | `out/q3_results.json`, `out/q4_results.json`, `out/q5_results.json`, `out/q6_results.json`, `out/explain_q*.json` |
-| Q2 (`src/g.js`), schema/index custody, report, slide outline | Alejandra  | `out/q2_results.json`, `STAGE_3_Report_MongoDB_Airbnb.tex`, `SLIDE_OUTLINE.md` |
-| GitHub repo, README, PDF build                  | Abhinav    | `README.md`, `scripts/f.js`                                |
+| `src/loader.js`, `src/driver.js`, Q1 (`src/q1.js`), `web/` UI | Abhinav    | `out/load_evidence.txt`, `out/q1_results.json`, `web/server.js` |
+| Q3 (`src/q3.js`), Q4 (`src/q4.js`), Q5 (`src/q5.js`), Q6 (`src/q6.js`), explain plans | Hanshul    | `out/q3_results.json`, `out/q4_results.json`, `out/q5_results.json`, `out/q6_results.json`, `out/explain_q*.json` |
+| Q2 (`src/q2.js`), schema/index custody, report, slide outline | Alejandra  | `out/q2_results.json`, `STAGE_3_Report_MongoDB_Airbnb.tex`, `SLIDE_OUTLINE.md` |
+| GitHub repo, README, PDF build                  | Abhinav    | `README.md`, `scripts/build_pdfs.js`                       |
 
 If a teammate wants to phrase things differently that's fine – just keep the
 *owned files* column accurate so the three reports don't contradict each other.

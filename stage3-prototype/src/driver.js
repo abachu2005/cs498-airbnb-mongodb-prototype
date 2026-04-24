@@ -1,24 +1,31 @@
+// driver: end-to-end CLI runner
+// boots an in-process mongo, calls the loader, picks demo dates from the loaded data,
+// runs all 6 queries, captures explain('executionStats') for each, and writes everything to out/
+// (if you only want the demo UI, run web/server.js instead -- this script is for repro / grading)
 const fs = require("fs/promises");
 const path = require("path");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { MongoClient } = require("mongodb");
 
-const A = require("./a");
-const B = require("./b");
-const C = require("./c");
-const D = require("./d");
-const G = require("./g");
-const H = require("./h");
-const I = require("./i");
+const A = require("./loader");
+const B = require("./q1");
+const C = require("./q5");
+const D = require("./q6");
+const G = require("./q2");
+const H = require("./q3");
+const I = require("./q4");
 
 const O = path.join(__dirname, "..", "out");
 
+// add n days to a yyyy-mm-dd string, returning yyyy-mm-dd; UTC math avoids DST surprises
 function ds(s, n) {
   const d = new Date(`${s}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().substring(0, 10);
 }
 
+// q1 needs two consecutive days where SOMETHING is available in portland
+// without this the demo could pick a window with zero matches, which looks broken
 async function pickPortlandDates(db) {
   const a = await db
     .collection("calendar")
@@ -30,6 +37,7 @@ async function pickPortlandDates(db) {
     ])
     .toArray();
 
+  // walk the sorted active-day list, return the first pair where day+1 also exists
   for (let i = 0; i < a.length; i++) {
     const s = a[i]._id;
     const e = ds(s, 1);
@@ -38,6 +46,8 @@ async function pickPortlandDates(db) {
   return [a[0]._id, a[Math.min(1, a.length - 1)]._id];
 }
 
+// q2/q3 want a month that's actually present in the loaded calendar
+// pick the middle one so the demo doesn't sit at the edge of the snapshot window
 async function pickMonth(db, c) {
   const a = await db
     .collection("calendar")
@@ -50,6 +60,7 @@ async function pickMonth(db, c) {
   return a.length ? a[Math.floor(a.length / 2)]._id : null;
 }
 
+// pretty-print a collection's indexes for the load_evidence dump
 async function fmtIdx(c) {
   const a = await c.indexes();
   return a
@@ -58,6 +69,7 @@ async function fmtIdx(c) {
     .join("\n");
 }
 
+// per-city counts for the load evidence file (sanity check that each city loaded)
 async function perCity(db, k) {
   const a = ["los_angeles", "portland", "salem", "san_diego"];
   const r = {};
@@ -67,6 +79,9 @@ async function perCity(db, k) {
   return r;
 }
 
+// dumps load_evidence.txt -- this is the file referenced from the report's loader section
+// includes total counts, per-city counts, sample docs, and the index list, so a grader can
+// verify the schema/index claims without running the loader themselves
 async function writeEvidence(db, counts, dates, m2, m3, m4) {
   const a = await db.collection("listings").find({ city: "portland" }, { projection: { _id: 0, listing_id: 1, name: 1, neighborhood: 1, room_type: 1, price: 1, review_scores_rating: 1, host_name: 1 } }).limit(3).toArray();
   const b = await db.collection("calendar").find({ city: "salem" }, { projection: { _id: 0 } }).limit(3).toArray();
@@ -136,6 +151,8 @@ async function writeEvidence(db, counts, dates, m2, m3, m4) {
 async function main() {
   await fs.mkdir(O, { recursive: true });
   console.log("[driver] starting mongodb-memory-server");
+  // pin the binary to 8.0.3 and reuse the cached download dir from task3-deliverables/
+  // so re-runs don't have to redownload the ~150MB mongo binary
   const m = await MongoMemoryServer.create({
     binary: { version: "8.0.3", downloadDir: path.join(__dirname, "..", "..", "task3-deliverables", "data", "mongodb-binaries") },
   });
@@ -150,16 +167,20 @@ async function main() {
     const counts = await A.load(db);
     console.log("[driver] counts", counts);
 
+    // pick demo parameters AFTER load so they always match the data that's actually present
     const dates = await pickPortlandDates(db);
     console.log(`[driver] Q1 dates ${dates[0]} ${dates[1]}`);
 
     const m2 = await pickMonth(db, "portland");
     const m3 = await pickMonth(db, "salem");
+    // q4 just needs the year of the chosen month -- months() inside q4.js fixes mar..aug
     const m4 = (m2 || "2025-12").substring(0, 4);
     console.log(`[driver] Q2 month ${m2}, Q3 month ${m3}, Q4 year ${m4}`);
 
     await writeEvidence(db, counts, dates, m2, m3, m4);
 
+    // each query: run -> dump results json, explain -> dump executionStats json
+    // these json files back the numbers cited in the report's section 3
     console.log("[driver] running Q1");
     const q1 = await B.run(db, { city: "portland", dates, limit: 25 });
     const q1e = await B.explain(db, { city: "portland", dates, limit: 25 });
@@ -202,6 +223,7 @@ async function main() {
     await fs.writeFile(path.join(O, "explain_q6.json"), JSON.stringify(q6e, null, 2));
     console.log(`[driver] Q6 returned ${q6.length} rows`);
 
+    // single-line-per-query rollup, useful for quick eyeballing without opening every json
     const s = {
       counts,
       q1: { rows: q1.length, dates },
@@ -214,6 +236,7 @@ async function main() {
     await fs.writeFile(path.join(O, "summary.json"), JSON.stringify(s, null, 2));
     console.log("[driver] done", s);
   } finally {
+    // always release the mongo binary subprocess so re-running doesn't leak ports
     await c.close();
     await m.stop();
   }

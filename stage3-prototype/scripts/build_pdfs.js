@@ -1,3 +1,7 @@
+// builds the two human-readable PDFs that go to canvas:
+//   STAGE_3_Report_MongoDB_Airbnb.pdf  -- compiled from .tex via tectonic
+//   SLIDE_OUTLINE.pdf                  -- rendered from SLIDE_OUTLINE.md via md-to-pdf
+// run with: npm run build:pdfs
 const { mdToPdf } = require("md-to-pdf");
 const { spawnSync } = require("child_process");
 const path = require("path");
@@ -5,6 +9,7 @@ const fs = require("fs");
 
 const a = path.join(__dirname, "..");
 
+// shared print stylesheet so the slide-outline PDF doesn't look like a github readme dump
 const b = `
   body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.4; color: #1e2831; }
   h1 { font-size: 17pt; margin-top: 0.6em; }
@@ -22,6 +27,7 @@ const b = `
   const c = path.join(a, "STAGE_3_Report_MongoDB_Airbnb.tex");
   if (fs.existsSync(c)) {
     console.log("[pdf] tex -> pdf via tectonic");
+    // tectonic auto-fetches missing TeX packages, so first run is slow but reproducible
     const d = spawnSync("tectonic", [c], { cwd: a, stdio: "inherit" });
     if (d.status !== 0) throw new Error(`tectonic exit ${d.status}`);
   }
@@ -29,6 +35,7 @@ const b = `
   const e = path.join(a, "SLIDE_OUTLINE.md");
   if (fs.existsSync(e)) {
     console.log("[pdf] md -> pdf via md-to-pdf (SLIDE_OUTLINE)");
+    // --no-sandbox needed when running puppeteer/chrome in some CI / dev sandboxes
     await mdToPdf(
       { path: e },
       {

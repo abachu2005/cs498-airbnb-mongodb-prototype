@@ -1,8 +1,12 @@
+// loader: streams the four insideairbnb csvs per city straight into mongo
+// nothing here is held fully in memory -- the calendar files alone are 23M+ rows
+// p = streaming csv parser, ps = sync parser used only for the small uncompressed nbhd file
 const z = require("zlib");
 const { Readable } = require("stream");
 const { parse: p } = require("csv-parse");
 const { parse: ps } = require("csv-parse/sync");
 
+// city -> dataset urls, snapshot dates baked in per city (insideairbnb publishes per snapshot)
 const S = {
   los_angeles: {
     listings: "https://data.insideairbnb.com/united-states/ca/los-angeles/2025-12-04/data/listings.csv.gz",
@@ -30,6 +34,7 @@ const S = {
   },
 };
 
+// env override, accepts a number or "all" / "Infinity", falls back to d
 function envN(k, d) {
   const v = process.env[k];
   if (v == null || v === "") return d;
@@ -38,6 +43,8 @@ function envN(k, d) {
   return Number.isFinite(n) ? n : d;
 }
 
+// per-collection row caps, default Infinity = full insideairbnb snapshot
+// LIMIT_* env vars let the fast/demo modes cap at a few thousand rows for ~10s boots
 const L = {
   listings: envN("LIMIT_LISTINGS", Infinity),
   reviews: envN("LIMIT_REVIEWS", Infinity),
@@ -45,6 +52,8 @@ const L = {
   calendar: envN("LIMIT_CALENDAR", Infinity),
 };
 
+// fetch a csv into an array (g = gzipped), used by callers that want everything in memory
+// kept around for small files only; the big csvs go through fStream instead
 async function f(u, n, g) {
   const r = await fetch(u);
   if (!r.ok) throw new Error(`HTTP ${r.status} ${u}`);
@@ -66,6 +75,9 @@ async function f(u, n, g) {
   return n === Infinity ? w : w.slice(0, n);
 }
 
+// streaming variant: fetch -> gunzip -> csv parse -> shape via fn -> push into sink
+// stops early once n rows seen, never holds the full file in memory (this is what makes
+// loading 16M LA calendar rows possible inside mongodb-memory-server)
 async function fStream(u, n, g, fn, sink) {
   const r = await fetch(u);
   if (!r.ok) throw new Error(`HTTP ${r.status} ${u}`);
@@ -103,6 +115,8 @@ async function fStream(u, n, g, fn, sink) {
   return i;
 }
 
+// batched insertMany sink so the heap stays flat regardless of total row count
+// ordered:false lets a single bad row not abort the whole batch (insideairbnb has occasional dupes)
 function makeSink(coll, batch) {
   const b = batch || 5000;
   let buf = [];
@@ -130,12 +144,16 @@ function makeSink(coll, batch) {
   };
 }
 
+// numeric coerce, strips $ and , so "$1,250.00" parses cleanly, returns null on bad input
 function n(v) {
   if (v === undefined || v === null || v === "") return null;
   const x = Number(String(v).replace(/[$,]/g, ""));
   return Number.isFinite(x) ? x : null;
 }
 
+// listings doc shape, c = city tag, r = raw csv row
+// description is trimmed to 200 chars -- no query needs the full text and it bloats mem
+// neighbourhood_cleansed is preferred over neighbourhood (insideairbnb's curated value)
 function dl(c, r) {
   return {
     city: c,
@@ -157,6 +175,7 @@ function dl(c, r) {
   };
 }
 
+// reviews doc shape, comments trimmed to 200 chars (q5/q6 only need date + ids)
 function dr(c, r) {
   return {
     city: c,
@@ -169,6 +188,7 @@ function dr(c, r) {
   };
 }
 
+// neighborhoods doc shape -- insideairbnb uses two slightly different column names across cities
 function dn(c, r) {
   return {
     city: c,
@@ -176,6 +196,7 @@ function dn(c, r) {
   };
 }
 
+// calendar doc shape, "t"/"f" -> bool so q1/q2/q3 can match on `available: true` directly
 function dc(c, r) {
   return {
     city: c,
@@ -189,12 +210,16 @@ function dc(c, r) {
   };
 }
 
+// boots all four collections, walks each city, indexes after load (faster than indexing-as-we-go)
+// batch sizes (2k/5k/1k/10k) tuned per collection so each insertMany stays under ~10MB on the wire
 async function load(db) {
   const lc = db.collection("listings");
   const rc = db.collection("reviews");
   const nc = db.collection("neighborhoods");
   const cc = db.collection("calendar");
 
+  // dedup set for neighborhoods -- insideairbnb sometimes lists the same nbhd twice in one csv
+  // and we have a unique index on (city, neighborhood) so collisions would crash insertMany
   const seen = new Set();
 
   let TL = 0;
@@ -227,15 +252,16 @@ async function load(db) {
     TC += await fStream(v.calendar, L.calendar, true, (r) => dc(k, r), sC);
   }
 
+  // the eight stage 2 indexes -- creating after the load is ~2x faster than maintaining per-insert
   console.log("[loader] indexing");
-  await lc.createIndex({ city: 1, listing_id: 1 }, { unique: true });
-  await lc.createIndex({ city: 1, neighborhood: 1, room_type: 1 });
-  await lc.createIndex({ host_id: 1, city: 1 });
-  await cc.createIndex({ city: 1, listing_id: 1, date: 1 });
-  await cc.createIndex({ city: 1, date: 1, available: 1 });
-  await rc.createIndex({ city: 1, listing_id: 1, date: 1 });
-  await rc.createIndex({ reviewer_id: 1, listing_id: 1, date: 1 });
-  await nc.createIndex({ city: 1, neighborhood: 1 }, { unique: true });
+  await lc.createIndex({ city: 1, listing_id: 1 }, { unique: true });   // pk-style listing lookup
+  await lc.createIndex({ city: 1, neighborhood: 1, room_type: 1 });     // q1 / q2 / q3 candidate filter
+  await lc.createIndex({ host_id: 1, city: 1 });                         // q6 same-host lookup (see report critique on key order)
+  await cc.createIndex({ city: 1, listing_id: 1, date: 1 });             // per-listing calendar scan (q3, q4, q6)
+  await cc.createIndex({ city: 1, date: 1, available: 1 });              // date-window scan (q1, q2)
+  await rc.createIndex({ city: 1, listing_id: 1, date: 1 });             // per-listing reviews (q6)
+  await rc.createIndex({ reviewer_id: 1, listing_id: 1, date: 1 });      // q6 repeat-reviewer aggregation prefix
+  await nc.createIndex({ city: 1, neighborhood: 1 }, { unique: true });  // q2 anti-join target + dedup safety net
 
   const cl = await lc.estimatedDocumentCount();
   const cr = await rc.estimatedDocumentCount();

@@ -65,11 +65,18 @@ What the UI shows:
 
 ## Build the PDFs
 
-The Stage 3 report is written in LaTeX (`STAGE_3_Report_MongoDB_Airbnb.tex`) and the slide outline in Markdown (`SLIDE_OUTLINE.md`). One script builds both:
+Three PDFs go to Canvas: the 2-page **report**, the **slide outline**, and the **code listing**. Two scripts produce all three:
 
 ```bash
 cd stage3-prototype
-node scripts/f.js
+npm run build:pdfs       # report (tex -> tectonic) + slide outline (md -> md-to-pdf)
+npm run build:codepdf    # one PDF containing every src/ + web/ source file with comments
 ```
 
-This produces `STAGE_3_Report_MongoDB_Airbnb.pdf` (via `tectonic`) and `SLIDE_OUTLINE.pdf` (via `md-to-pdf`) in `stage3-prototype/`. Requires `tectonic` (install with `brew install tectonic`) for the LaTeX report.
+Outputs in `stage3-prototype/`:
+
+- `STAGE_3_Report_MongoDB_Airbnb.pdf` — 2-page individual report (Deliverable 4)
+- `SLIDE_OUTLINE.pdf` — speaker outline / notes for the slide deck (Deliverable 1/2 source material)
+- `STAGE_3_Code.pdf` — every source file in one paginated, syntax-formatted PDF (Deliverable 3)
+
+The report build requires `tectonic` (install with `brew install tectonic`). The code PDF build only needs Node.
