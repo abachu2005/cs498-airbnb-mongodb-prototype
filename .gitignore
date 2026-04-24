@@ -4,11 +4,9 @@ node_modules/
 .DS_Store
 **/.DS_Store
 *.zip
-.Rhistory
 .cache/
 
+# stuff outside the submission that lives in this working tree
 chemistry report/
-*.aux
-*.log
-*.out
-*.synctex.gz
+task3-deliverables/
+task3-deliverables.zip

@@ -151,10 +151,10 @@ async function writeEvidence(db, counts, dates, m2, m3, m4) {
 async function main() {
   await fs.mkdir(O, { recursive: true });
   console.log("[driver] starting mongodb-memory-server");
-  // pin the binary to 8.0.3 and reuse the cached download dir from task3-deliverables/
-  // so re-runs don't have to redownload the ~150MB mongo binary
+  // pin the binary to 8.0.3; mongodb-memory-server caches the download in
+  // its default cache dir so re-runs don't re-fetch the ~150MB mongo binary
   const m = await MongoMemoryServer.create({
-    binary: { version: "8.0.3", downloadDir: path.join(__dirname, "..", "..", "task3-deliverables", "data", "mongodb-binaries") },
+    binary: { version: "8.0.3" },
   });
   const u = m.getUri();
   console.log(`[driver] uri ${u}`);

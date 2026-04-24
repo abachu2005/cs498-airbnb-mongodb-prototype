@@ -76,7 +76,7 @@ async function pickMonth(db, c) {
 async function boot() {
   console.log("[web] starting mongodb-memory-server");
   G_MEM = await MongoMemoryServer.create({
-    binary: { version: "8.0.3", downloadDir: path.join(__dirname, "..", "..", "task3-deliverables", "data", "mongodb-binaries") },
+    binary: { version: "8.0.3" },
   });
   const u = G_MEM.getUri();
   console.log(`[web] uri ${u}`);
