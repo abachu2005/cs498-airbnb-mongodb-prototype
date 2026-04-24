@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AirBnB &times; MongoDB &mdash; Stage 3 Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="boot" id="boot">
+      <div class="boot-card">
+        <div class="boot-spinner"></div>
+        <h2>Booting in-memory MongoDB&hellip;</h2>
+        <p id="boot-status">Spinning up <code>mongodb-memory-server</code>, fetching CSVs from <code>data.insideairbnb.com</code>, building 8 indexes. First boot takes ~10&nbsp;seconds.</p>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">m</div>
+        <div class="brand-text">
+          <div class="brand-title">AirBnB &middot; MongoDB Explorer</div>
+          <div class="brand-sub">CS&nbsp;498 Stage&nbsp;3 prototype &middot; in-memory cluster</div>
+        </div>
+      </div>
+      <div class="stats" id="stats">
+        <div class="stat"><span class="stat-label">listings</span><span class="stat-value" id="s-l">&mdash;</span></div>
+        <div class="stat"><span class="stat-label">calendar</span><span class="stat-value" id="s-c">&mdash;</span></div>
+        <div class="stat"><span class="stat-label">reviews</span><span class="stat-value" id="s-r">&mdash;</span></div>
+        <div class="stat"><span class="stat-label">neighborhoods</span><span class="stat-value" id="s-n">&mdash;</span></div>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab is-active" data-tab="q1">
+        <span class="tab-tag">Q1</span>
+        <span class="tab-title">Two-night search</span>
+        <span class="tab-sub">filter &middot; group &middot; lookup &middot; sort</span>
+      </button>
+      <button class="tab" data-tab="q5">
+        <span class="tab-tag">Q5</span>
+        <span class="tab-title">December reviews</span>
+        <span class="tab-sub">aggregation &middot; per city &middot; per year</span>
+      </button>
+      <button class="tab" data-tab="q6">
+        <span class="tab-tag">Q6</span>
+        <span class="tab-title">Re-book reminder</span>
+        <span class="tab-sub">multi-step &middot; same-host listings</span>
+      </button>
+    </nav>
+
+    <main class="content">
+      <section id="panel-q1" class="panel is-active">
+        <header class="panel-head">
+          <div>
+            <h1>Find a place for two consecutive nights</h1>
+            <p class="lead">Pick a city and we&rsquo;ll surface the highest-rated listings whose <code>calendar</code> is open for both dates.</p>
+          </div>
+        </header>
+
+        <form class="search" id="q1-form">
+          <label class="field">
+            <span>City</span>
+            <select id="q1-city">
+              <option value="portland">Portland</option>
+              <option value="los_angeles">Los Angeles</option>
+              <option value="san_diego">San Diego</option>
+              <option value="salem">Salem</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Check-in</span>
+            <input type="date" id="q1-from" />
+          </label>
+          <label class="field">
+            <span>Check-out</span>
+            <input type="date" id="q1-to" />
+          </label>
+          <label class="field field-num">
+            <span>Limit</span>
+            <input type="number" id="q1-limit" min="1" max="100" value="12" />
+          </label>
+          <button type="submit" class="btn-primary">Search</button>
+        </form>
+        <div class="hint" id="q1-hint">Leave dates blank to use the earliest pair of consecutive available dates from the loaded data.</div>
+
+        <div class="results" id="q1-results"></div>
+      </section>
+
+      <section id="panel-q5" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1>December reviews per city, per year</h1>
+            <p class="lead">A pure aggregation over <code>reviews</code> &mdash; one bar per (city, year) where <code>date</code> matches <code>YYYY-12-DD</code>.</p>
+          </div>
+          <button id="q5-run" class="btn-primary">Run aggregation</button>
+        </header>
+        <div class="results" id="q5-results"></div>
+      </section>
+
+      <section id="panel-q6" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1>Reminders for repeat guests</h1>
+            <p class="lead">For every reviewer who reviewed the same listing more than once we look up its host&rsquo;s other listings in the same city &mdash; one aggregation, then a small batch of indexed point reads.</p>
+          </div>
+          <div class="panel-controls">
+            <label class="field-inline">
+              <span>Limit</span>
+              <input type="number" id="q6-limit" min="1" max="100" value="12" />
+            </label>
+            <button id="q6-run" class="btn-primary">Run query</button>
+          </div>
+        </header>
+        <div class="results" id="q6-results"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>Indexes verified with <code>explain('executionStats')</code> &middot; results in <code>stage3-prototype/out/</code></span>
+      <a href="https://github.com/abachu2005/cs498-airbnb-mongodb-prototype" target="_blank" rel="noopener">GitHub repository &rarr;</a>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

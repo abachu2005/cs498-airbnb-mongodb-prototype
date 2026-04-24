@@ -13,7 +13,7 @@ Team: Abhinav Bachu, Hanshul Bahl, Alejandra Arias.
 | `instructions_for_todays_assignment.rtf` | Stage 2 assignment text |
 | `stage_3_instructions.rtf` | Stage 3 assignment text |
 | `task3-deliverables/` | **Stage 2** design deliverables (TASK_3_Report and supporting scripts/assets) |
-| `stage3-prototype/` | **Stage 3** working prototype + Stage 3 report + slide outline |
+| `stage3-prototype/` | **Stage 3** working prototype (`src/` queries, `web/` demo UI) + Stage 3 report + slide outline |
 
 ## Stages at a glance
 
@@ -38,6 +38,24 @@ Outputs:
 - `out/load_evidence.txt` - collection counts, sample documents, index list
 - `out/q1_results.json`, `out/q5_results.json`, `out/q6_results.json`
 - `out/explain_q1.json`, `out/explain_q5.json`, `out/explain_q6.json` - full execution plans
+
+## Run the demo UI (recommended for the presentation)
+
+A small Express + vanilla-JS frontend lives in `stage3-prototype/web/`. It boots the same in-process Mongo, loads the same data once, and exposes the three queries as an interactive UI.
+
+```bash
+cd stage3-prototype
+npm install        # only the first time, installs express
+npm run web
+```
+
+Then open <http://localhost:4173>. First boot takes ~10 s while the loader runs (a spinner overlay is shown); after that, every query runs against the live in-process database.
+
+What the UI shows:
+
+- **Q1 — Two-night search.** City picker + date range. Renders the highest-rated listings whose `calendar` is open for both nights, as Airbnb-style cards with rating, neighborhood, room type, sleeps, and a few amenities.
+- **Q5 — December reviews per city per year.** Per-city cards with a horizontal bar chart, one bar per year.
+- **Q6 — Re-book reminders.** One card per repeat-reviewer / listing pair, with the host's other listings in the same city pulled in via indexed point reads.
 
 ## Build the PDFs
 
