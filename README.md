@@ -11,7 +11,6 @@ Team: Abhinav Bachu, Hanshul Bahl, Alejandra Arias.
 |------|-------------|
 | `STAGE_3_SLIDES.pdf` | 12-slide presentation deck |
 | `STAGE_3_Code.pdf` | Every source file in one paginated PDF |
-| `STAGE_3_Report_MongoDB_Airbnb.pdf` | Individual 2-page report (3rd page = references) |
 
 The repo itself (linked from the slide deck) is the prototype.
 
