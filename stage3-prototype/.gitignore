@@ -1,0 +1,4 @@
+node_modules/
+
+# intermediate per-slide PNGs produced by scripts/build_slides.js -- the PDF is the deliverable
+slides/rendered/
