@@ -6,3 +6,9 @@ node_modules/
 *.zip
 .Rhistory
 .cache/
+
+chemistry report/
+*.aux
+*.log
+*.out
+*.synctex.gz
