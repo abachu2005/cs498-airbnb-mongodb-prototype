@@ -135,7 +135,7 @@
       }
       .frame .shot {
         width: 100%; display: block;
-        max-height: 830px;
+        max-height: 640px;
         object-fit: cover;
         object-position: top center;
       }
@@ -145,6 +145,27 @@
         text-align: center; letter-spacing: 0.04em;
       }
       .frame-caption code { background: var(--code-bg); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+
+      /* per-slide query-plan critique block sitting under each demo screenshot */
+      .plan-note {
+        margin-top: 18px;
+        background: var(--surface);
+        border: 1px solid var(--line-soft);
+        border-left: 4px solid var(--teal);
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: var(--shadow);
+      }
+      .plan-note .lbl {
+        font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--teal); font-weight: 800; margin-bottom: 6px;
+      }
+      .plan-note .body-text { font-size: 17px; line-height: 1.45; color: var(--ink); }
+      .plan-note .body-text b { color: var(--teal); }
+      .plan-note .body-text code { background: var(--code-bg); padding: 1px 6px; border-radius: 3px; font-size: 15px; }
+      .plan-note.warn { border-left-color: var(--accent); }
+      .plan-note.warn .lbl { color: var(--accent); }
+      .plan-note.warn .body-text b { color: var(--accent); }
 
       /* ───── tables ───── */
       .tbl { width: 100%; border-collapse: collapse; font-size: 18px; }
@@ -157,6 +178,7 @@
       .split-43 { display: grid; grid-template-columns: 4fr 5fr; gap: 48px; height: 100%; }
       .split-32 { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; height: 100%; }
       .col3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+      .col4   { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 22px; }
 
       ul.clean { list-style: none; padding: 0; margin: 0; }
       ul.clean li {
@@ -316,6 +338,30 @@
         <span class="pill">CLI evidence pipeline · <code style="background:transparent">npm start</code></span>
         <span class="pill">Live demo UI · <code style="background:transparent">npm run web</code></span>
       </div>
+
+      <div class="label mt-32">Acceptance criteria — what the rubric asks for, what we shipped</div>
+      <div class="col4 mt-12">
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl" style="color:var(--ink-mute)">Queries (20 pts)</div>
+          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">6 of 6</b> implemented</h3>
+          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">Min is 4 (3 for 2-person teams). All six have <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">explain('executionStats')</code> committed to <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">out/</code>.</p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl" style="color:var(--ink-mute)">Data coverage (10 pts)</div>
+          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Full</b> InsideAirbnb load</h3>
+          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">All 4 cities, all 4 CSVs each, no row caps. 23.17 M calendar rows + 3.20 M reviews + 63.5 K listings.</p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl" style="color:var(--ink-mute)">Frontend</div>
+          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Live UI</b> in slides</h3>
+          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">Express + vanilla JS demo with one tab per query. Every screenshot in this deck is from the running app.</p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl" style="color:var(--ink-mute)">Reproducibility</div>
+          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Two</b> commands</h3>
+          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px"><code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">npm start</code> for evidence, <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">npm run web</code> for the UI. No remote cluster, no env setup.</p>
+        </div>
+      </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">02 / 13</span></div>
   </section>
@@ -328,13 +374,14 @@
       <div class="crumb"><b>03</b>Data model</div>
       <div>4 collections · 8 indexes</div>
     </div>
-    <div class="body split">
+    <div class="body">
+     <div class="split" style="height:auto">
       <div>
         <h2 class="kicker">The schema, in one screen</h2>
-        <h1 class="title" style="font-size:60px">Time-series stays<br/><span style="color:var(--accent)">separate</span> from listings.</h1>
-        <p class="lede" style="margin-top:24px">No giant arrays to rewrite on every booking change. Each of the four CSVs from InsideAirbnb maps to one collection, indexed for the queries it actually serves.</p>
+        <h1 class="title" style="font-size:54px">Time-series stays<br/><span style="color:var(--accent)">separate</span> from listings.</h1>
+        <p class="lede" style="margin-top:18px;font-size:20px">No giant arrays to rewrite on every booking change. Each of the four CSVs from InsideAirbnb maps to one collection, indexed for the queries it actually serves.</p>
 
-        <div class="mt-32">
+        <div class="mt-24">
           <table class="tbl">
             <tr><th>collection</th><th>per-row</th><th>scale</th></tr>
             <tr><td><b style="color:var(--teal)">listings</b></td><td>property metadata</td><td>~16 K / city</td></tr>
@@ -347,8 +394,8 @@
 
       <div>
         <div class="label">Indexes — all carried from Stage 2 unchanged</div>
-        <div class="stat-tile mt-12" style="padding:30px">
-          <div class="idx">
+        <div class="stat-tile mt-12" style="padding:24px 28px">
+          <div class="idx" style="font-size:15px;line-height:1.7">
 <span class="col">listings</span>     { city, listing_id }              <span class="uniq">UNIQUE</span><br/>
 <span class="col">listings</span>     { city, neighborhood, room_type }<br/>
 <span class="col">listings</span>     { host_id, city }<br/>
@@ -360,8 +407,25 @@
           </div>
         </div>
 
-        <div class="callout teal mt-24"><b style="color:var(--teal)">Zero schema changes between Stage 2 and Stage 3.</b> Stage 3 is a true validation of the design, not a redesign.</div>
+        <div class="callout teal mt-18" style="font-size:18px"><b style="color:var(--teal)">Zero schema changes between Stage 2 and Stage 3.</b> Stage 3 is a true validation of the design, not a redesign.</div>
       </div>
+     </div>
+
+      <div class="label mt-32">Query → index mapping · the design rationale, made concrete</div>
+      <table class="tbl mt-12" style="font-size:16px">
+        <tr>
+          <th>query</th>
+          <th>collection(s) touched</th>
+          <th>index that does the work</th>
+          <th>plan</th>
+        </tr>
+        <tr><td><b style="color:var(--accent)">Q1</b> · two-night search</td><td>calendar → listings</td><td><span class="mono">calendar { city, date, available }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN</span></td></tr>
+        <tr><td><b style="color:var(--accent)">Q2</b> · empty neighborhoods</td><td>calendar + listings + neighborhoods</td><td><span class="mono">calendar { city, date, available }</span> + <span class="mono">listings { city, listing_id }</span> + <span class="mono">neighborhoods { city, neighborhood }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×3</span></td></tr>
+        <tr><td><b style="color:var(--accent)">Q3</b> · bookable windows</td><td>listings → calendar</td><td><span class="mono">listings { city, neighborhood, room_type }</span> + <span class="mono">calendar { city, listing_id, date }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×2</span></td></tr>
+        <tr><td><b style="color:var(--accent)">Q4</b> · monthly trend</td><td>composes Q3 ×6</td><td>same as Q3, looped per month</td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×12</span></td></tr>
+        <tr><td><b style="color:var(--accent)">Q5</b> · December reviews</td><td>reviews</td><td>none — full collection scan by design</td><td><span class="pill accent" style="padding:2px 10px;font-size:13px;margin:0">COLLSCAN</span></td></tr>
+        <tr><td><b style="color:var(--accent)">Q6</b> · re-book reminder</td><td>reviews → listings + calendar + listings</td><td><span class="mono">reviews { reviewer_id, listing_id, date }</span> + 3 listings/calendar indexes per record</td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×4 / record</span></td></tr>
+      </table>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">03 / 13</span></div>
   </section>
@@ -396,6 +460,31 @@
         <div class="stat-tile"><div class="num teal">481</div><div class="lbl">Neighborhoods</div><div class="sub">Canonical names from InsideAirbnb's per-city CSV</div></div>
         <div class="stat-tile"><div class="num teal">~6.5 min</div><div class="lbl">Total load + index build</div><div class="sub">From cold start to first query, no remote cluster</div></div>
         <div class="stat-tile"><div class="num teal">4 / 4</div><div class="lbl">Cities loaded</div><div class="sub">"Use of all or nearly all the data" — full credit target met</div></div>
+      </div>
+
+      <div class="split-32 mt-32" style="height:auto">
+        <div>
+          <div class="label">Per-city breakdown · the full load</div>
+          <table class="tbl mt-12">
+            <tr><th>city</th><th>listings</th><th>calendar rows</th><th>reviews</th><th>neighborhoods</th></tr>
+            <tr><td><b style="color:var(--teal)">Los Angeles</b></td><td class="num">45,585</td><td class="num">16,638,552</td><td class="num">1,785,848</td><td class="num">270</td></tr>
+            <tr><td><b style="color:var(--teal)">San Diego</b></td><td class="num">13,162</td><td class="num">4,804,130</td><td class="num">896,198</td><td class="num">108</td></tr>
+            <tr><td><b style="color:var(--teal)">Portland</b></td><td class="num">4,455</td><td class="num">1,626,075</td><td class="num">500,309</td><td class="num">95</td></tr>
+            <tr><td><b style="color:var(--teal)">Salem</b></td><td class="num">280</td><td class="num">102,200</td><td class="num">18,367</td><td class="num">8</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="label">Evidence pipeline output · <code style="background:var(--code-bg);padding:1px 6px;border-radius:3px;font-size:14px">stage3-prototype/out/</code></div>
+          <div class="stat-tile mt-12" style="padding:18px 22px">
+            <div class="mono" style="font-size:15px;line-height:1.85;color:var(--ink)">
+              load_evidence.txt<br/>
+              q1_results.json … q6_results.json<br/>
+              explain_q1.json … explain_q6.json<br/>
+              summary.json
+            </div>
+            <p style="font-size:14px;color:var(--ink-soft);margin:14px 0 0;line-height:1.5">Every screenshot, every metric, every row count in this deck traces back to one of these files.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">04 / 13</span></div>
@@ -441,6 +530,10 @@
           <img class="shot" src="assets/demo_q1.png" alt="Q1 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full-data run · 25 highest-rated Portland listings open both nights · <code>explain</code> metrics in the table</div>
+        <div class="plan-note">
+          <div class="lbl">Query plan critique · Q1</div>
+          <div class="body-text"><b>Clean IXSCAN.</b> <code>calendar { city, date, available }</code> returns <b>3,012 keys / 3,012 docs</b> — zero over-fetch. The two-night intersection is collapsed in the index, then a single batched <code>$lookup</code> hits <code>listings { city, listing_id }</code>. <b>No bottleneck.</b></div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">05 / 13</span></div>
@@ -480,6 +573,10 @@
           <img class="shot" src="assets/demo_q2.png" alt="Q2 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full data · 2 of 95 Portland neighborhoods dark in <code>2026-06</code></div>
+        <div class="plan-note">
+          <div class="lbl">Query plan critique · Q2</div>
+          <div class="body-text"><b>Three indexes, no scans.</b> <code>$match</code> hits <code>calendar { city, date, available }</code>; <code>$lookup</code> rides <code>listings { city, listing_id }</code>; the anti-join is O(neighborhoods) in app code (~95 strings). <b>The only cost worth removing</b> is the <code>$lookup</code> itself — see slide 11, item 03.</div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">06 / 13</span></div>
@@ -518,6 +615,10 @@
           <img class="shot" src="assets/demo_q3.png" alt="Q3 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full data · 151 Salem entire-home listings · 2,330 bookable nights total in <code>2026-06</code></div>
+        <div class="plan-note">
+          <div class="lbl">Query plan critique · Q3</div>
+          <div class="body-text"><b>Two indexed reads per listing</b> — predictable, bounded footprint. The interval-detection logic lives in app code rather than aggregation, which is a <b>deliberate trade</b>: clarity and min-nights awareness in exchange for one extra round trip per listing.</div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">07 / 13</span></div>
@@ -558,6 +659,10 @@
           <img class="shot" src="assets/demo_q4.png" alt="Q4 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full data · 285,367 total bookable nights, Portland entire-home, 2026 · same monthly totals as the table</div>
+        <div class="plan-note">
+          <div class="lbl">Query plan critique · Q4</div>
+          <div class="body-text"><b>Composes Q3 in a 6-iteration loop</b> — same indexed plan, six times. Linear in the number of months, easy to extend. <b>Could fan out via <code>$facet</code></b> for a single-pass season view, but the loop wins on debuggability.</div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">08 / 13</span></div>
@@ -599,6 +704,10 @@
           <img class="shot" src="assets/demo_q5.png" alt="Q5 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full data · 193,340 December reviews across 4 cities, 62 (city, year) groups</div>
+        <div class="plan-note warn">
+          <div class="lbl">Query plan critique · Q5 — the weakest plan in the deck</div>
+          <div class="body-text"><b>COLLSCAN over all 3,200,722 reviews</b> to regex-filter the December dates. Tolerable today (~1.8s), but the <b>first thing to fix at 10 M+ rows</b>: add <code>reviews { date: 1 }</code> or store a parsed <code>year</code>/<code>month</code> field so the December cut becomes an IXSCAN.</div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">09 / 13</span></div>
@@ -634,6 +743,10 @@
           <img class="shot" src="assets/demo_q6.png" alt="Q6 demo screenshot" />
         </div>
         <div class="frame-caption">Live UI screenshot · full data · 25 repeat-reviewer reminders, each enriched with calendar + same-host listings</div>
+        <div class="plan-note">
+          <div class="lbl">Query plan critique · Q6</div>
+          <div class="body-text"><b>One aggregation + a small batch of indexed point reads.</b> Every per-record lookup lands on a Stage-2 index — <b>no new indexes</b> were added for any of the 6 queries. The lone wart is the <code>host_id_1_city_1</code> key order — see slide 11, item 01.</div>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">10 / 13</span></div>
@@ -651,25 +764,54 @@
       <h2 class="kicker">Things we'd redo, in order of impact</h2>
       <h1 class="title" style="font-size:62px">The 4-collection / 8-index core <span style="color:var(--accent)">held up well</span>.</h1>
 
-      <div class="col3 mt-32">
+      <div class="col4 mt-32">
         <div class="stat-tile">
           <div class="label">01 · Index key order</div>
-          <h3 class="sub mt-18" style="font-size:26px"><code style="background:var(--code-bg);padding:2px 8px;border-radius:4px;font-size:22px">host_id_1_city_1</code> is wrong.</h3>
-          <p style="font-size:18px;color:var(--ink-soft);line-height:1.5;margin-top:14px">Should be <code>{ city, host_id }</code> so it shares a <code>city</code> prefix with our other three <code>listings</code> indexes. Affects Q6's same-host lookup.</p>
+          <h3 class="sub mt-18" style="font-size:23px"><code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:18px">host_id_1_city_1</code> is wrong.</h3>
+          <p style="font-size:16px;color:var(--ink-soft);line-height:1.5;margin-top:12px">Should be <code>{ city, host_id }</code> so it shares a <code>city</code> prefix with our other three <code>listings</code> indexes. Affects <b>Q6</b>'s same-host lookup.</p>
         </div>
         <div class="stat-tile">
           <div class="label">02 · Date-as-string rationale</div>
-          <h3 class="sub mt-18" style="font-size:26px">Right call, wrong reason.</h3>
-          <p style="font-size:18px;color:var(--ink-soft);line-height:1.5;margin-top:14px">Stage 2 justified it on <i>storage</i>. The actual win was <b style="color:var(--accent)">query simplicity</b> — Q5's regex + <code>$substr</code> with no <code>$toDate</code> cost.</p>
+          <h3 class="sub mt-18" style="font-size:23px">Right call, wrong reason.</h3>
+          <p style="font-size:16px;color:var(--ink-soft);line-height:1.5;margin-top:12px">Stage 2 justified it on <i>storage</i>. The actual win was <b style="color:var(--accent)">query simplicity</b> — <b>Q5</b>'s regex + <code>$substr</code> with no <code>$toDate</code> cost.</p>
         </div>
         <div class="stat-tile">
           <div class="label">03 · Embed neighborhoods</div>
-          <h3 class="sub mt-18" style="font-size:26px">Per-city array would beat the <code>$lookup</code>.</h3>
-          <p style="font-size:18px;color:var(--ink-soft);line-height:1.5;margin-top:14px">Eliminates the <code>$lookup</code> in Q2 entirely. A few hundred bytes per city in exchange for one fewer cross-collection hop.</p>
+          <h3 class="sub mt-18" style="font-size:23px">Per-city array would beat the <code>$lookup</code>.</h3>
+          <p style="font-size:16px;color:var(--ink-soft);line-height:1.5;margin-top:12px">Eliminates the <code>$lookup</code> in <b>Q2</b> entirely. A few hundred bytes per city in exchange for one fewer cross-collection hop.</p>
+        </div>
+        <div class="stat-tile" style="border-color:var(--accent); background: var(--accent-soft);">
+          <div class="label" style="color:var(--accent)">04 · Query-plan bottleneck</div>
+          <h3 class="sub mt-18" style="font-size:23px"><b>Q5</b> still does a <span style="color:var(--accent)">COLLSCAN</span>.</h3>
+          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin-top:12px">All <b style="color:var(--accent)">3.2 M</b> reviews are scanned to regex-filter December. Add <code>reviews { date: 1 }</code> or store parsed <code>year</code>/<code>month</code> fields to make it an IXSCAN before the collection grows past ~10 M rows.</p>
         </div>
       </div>
 
-      <div class="callout teal mt-32" style="font-size:22px">What we <b style="color:var(--teal)">did</b> change between Stage 2 and Stage 3: <b style="color:var(--teal)">nothing</b> in the schema or indexes. Stage 3 is a true validation of Stage 2, not a redesign.</div>
+      <div class="callout teal mt-24" style="font-size:20px"><b style="color:var(--teal)">What changed between Stage 2 and Stage 3?</b> Nothing in the schema or indexes — no new collections, no added indexes, no key-order edits. Every per-record lookup in Q1–Q6 lands on a Stage-2 index. Stage 3 is a true validation of Stage 2, not a redesign.</div>
+
+      <div class="label mt-32">Stage 3 scorecard — at a glance</div>
+      <div class="col4 mt-12">
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="num teal" style="font-size:48px">5 / 6</div>
+          <div class="lbl">Queries on a clean IXSCAN</div>
+          <div class="sub" style="font-size:15px">Q1, Q2, Q3, Q4, Q6 hit compound indexes only. Q5 is the lone COLLSCAN — see card 04.</div>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="num teal" style="font-size:48px">7 / 8</div>
+          <div class="lbl">Stage-2 indexes used by Q1–Q6</div>
+          <div class="sub" style="font-size:15px">Only <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">host_id_1_city_1</code> went unused — would re-key it to <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">{ city, host_id }</code>.</div>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="num teal" style="font-size:48px">0</div>
+          <div class="lbl">New indexes added in Stage 3</div>
+          <div class="sub" style="font-size:15px">The Stage-2 design carried every query without any added indexes — strong signal it generalises.</div>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px; border-color:var(--accent); background:var(--accent-soft);">
+          <div class="num accent" style="font-size:48px">0</div>
+          <div class="lbl" style="color:var(--accent)">Schema changes Stage 2 → 3</div>
+          <div class="sub" style="font-size:15px">Same 4 collections, same 8 indexes, same 4-CSV mapping. Stage 3 is validation, not redesign.</div>
+        </div>
+      </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">11 / 13</span></div>
   </section>
@@ -682,24 +824,46 @@
       <div class="crumb"><b>12</b>Lessons learned</div>
       <div>What we'd tell the next team</div>
     </div>
-    <div class="body split">
-      <div>
-        <h2 class="kicker">About MongoDB</h2>
-        <h1 class="title" style="font-size:50px"><code style="background:var(--code-bg);padding:2px 12px;border-radius:6px;font-size:36px">explain</code> is the<br/>most useful thing<br/>in the toolbox.</h1>
-        <ul class="clean mt-32">
-          <li><code>mongodb-memory-server</code> shrinks the design loop from minutes to seconds — <b>make it the default</b> for prototyping.</li>
-          <li><code>explain('executionStats')</code> is the <b>single most valuable</b> design-validation tool — commit its output alongside query code.</li>
-          <li>Schema design happens at <b>index-design time</b>, not collection-design time.</li>
-        </ul>
+    <div class="body">
+      <div class="split" style="height:auto">
+        <div>
+          <h2 class="kicker">About MongoDB</h2>
+          <h1 class="title" style="font-size:42px"><code style="background:var(--code-bg);padding:2px 12px;border-radius:6px;font-size:32px">explain</code> is the most useful tool in the box.</h1>
+          <ul class="clean mt-24">
+            <li><code>mongodb-memory-server</code> shrinks the design loop from minutes to seconds — <b>make it the default</b> for prototyping.</li>
+            <li><code>explain('executionStats')</code> is the <b>single most valuable</b> design-validation tool — commit its output alongside query code.</li>
+            <li>Schema design happens at <b>index-design time</b>, not collection-design time.</li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="kicker">About cloud data systems generally</h2>
+          <h1 class="title" style="font-size:42px">Pseudocode is a guess. <span style="color:var(--teal)">A plan is proof.</span></h1>
+          <ul class="clean teal mt-24">
+            <li>Multi-step orchestration in app code beats nested <code>$lookup</code> for clarity <i>and</i> memory (Q3, Q4, Q6).</li>
+            <li>"Use the planner" — pseudocode is guessing, <code>explain</code> is proof.</li>
+            <li>Ship the loader and the queries together; <b>the schema isn't real</b> until something has actually loaded into it.</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h2 class="kicker">About cloud data systems generally</h2>
-        <h1 class="title" style="font-size:50px">Pseudocode is a guess.<br/><span style="color:var(--teal)">A plan is proof.</span></h1>
-        <ul class="clean teal mt-32">
-          <li>Multi-step orchestration in app code beats nested <code>$lookup</code> for clarity <i>and</i> memory (Q3, Q4, Q6).</li>
-          <li>"Use the planner" — pseudocode is guessing, <code>explain</code> is proof.</li>
-          <li>Ship the loader and the queries together; <b>the schema isn't real</b> until something has actually loaded into it.</li>
-        </ul>
+
+      <div class="label mt-32">If we were starting over · the four-step playbook we'd hand the next team</div>
+      <div class="col4 mt-12">
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl">Step 1 · Load before you design</div>
+          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">Stand up <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">mongodb-memory-server</code> on day 1. <b>You can't design what you haven't loaded.</b></p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl">Step 2 · Index per-query</div>
+          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">Write the query, run <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">explain</code>, <b>add the index that the planner asked for</b>. Then move on. Don't pre-index.</p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px">
+          <div class="lbl">Step 3 · App-code over <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">$lookup</code></div>
+          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">If a join needs more than one stage, <b>do it in code with indexed point reads</b>. Easier to read, easier to debug, almost always faster.</p>
+        </div>
+        <div class="stat-tile" style="padding:22px 24px; border-color:var(--teal); background:var(--teal-soft);">
+          <div class="lbl" style="color:var(--teal)">Step 4 · Commit the evidence</div>
+          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0"><b style="color:var(--teal)">Every query gets a JSON result file and an <code style="background:#ffffffaa;padding:1px 5px;border-radius:3px;font-size:14px">explain</code> file</b> committed beside the source. The schema isn't real, the plan isn't real, until they're files on disk.</p>
+        </div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">12 / 13</span></div>
