@@ -46,7 +46,20 @@
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "HD Wi-Fi A Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/44236062"
+      },
+      {
+        "name": "HD Wi-Fi B Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/49293636"
+      },
+      {
+        "name": "HD Wi-Fi D Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/549264144735745785"
+      }
+    ]
   },
   {
     "listing_name": "HD Wi-Fi E Bellflower Cerritos Lakewood LB LA",
@@ -59,7 +72,20 @@
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "HD Wi-Fi A Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/44236062"
+      },
+      {
+        "name": "HD Wi-Fi B Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/49293636"
+      },
+      {
+        "name": "HD Wi-Fi D Bellflower Cerritos Lakewood LB LA",
+        "listing_url": "https://www.airbnb.com/rooms/549264144735745785"
+      }
+    ]
   },
   {
     "listing_name": "5-Star Beverly Hills Suite",
@@ -82,58 +108,6 @@
     "reviewer_id": 25242044,
     "previously_booked": true,
     "month": "2017-04",
-    "min_nights": null,
-    "max_nights": null,
-    "available_in_same_month": false,
-    "other_host_listings_same_city": []
-  },
-  {
-    "listing_name": "City Place Lofts",
-    "listing_url": "https://www.airbnb.com/rooms/9140",
-    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
-    "host_name": "Wendell",
-    "reviewer_id": 9999925,
-    "previously_booked": true,
-    "month": "2014-02",
-    "min_nights": null,
-    "max_nights": null,
-    "available_in_same_month": false,
-    "other_host_listings_same_city": []
-  },
-  {
-    "listing_name": "City Place Lofts",
-    "listing_url": "https://www.airbnb.com/rooms/9140",
-    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
-    "host_name": "Wendell",
-    "reviewer_id": 9999925,
-    "previously_booked": true,
-    "month": "2014-05",
-    "min_nights": null,
-    "max_nights": null,
-    "available_in_same_month": false,
-    "other_host_listings_same_city": []
-  },
-  {
-    "listing_name": "City Place Lofts",
-    "listing_url": "https://www.airbnb.com/rooms/9140",
-    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
-    "host_name": "Wendell",
-    "reviewer_id": 4333658,
-    "previously_booked": true,
-    "month": "2014-01",
-    "min_nights": null,
-    "max_nights": null,
-    "available_in_same_month": false,
-    "other_host_listings_same_city": []
-  },
-  {
-    "listing_name": "City Place Lofts",
-    "listing_url": "https://www.airbnb.com/rooms/9140",
-    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
-    "host_name": "Wendell",
-    "reviewer_id": 4333658,
-    "previously_booked": true,
-    "month": "2014-06",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
@@ -170,6 +144,32 @@
     "listing_url": "https://www.airbnb.com/rooms/9140",
     "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
     "host_name": "Wendell",
+    "reviewer_id": 4333658,
+    "previously_booked": true,
+    "month": "2014-01",
+    "min_nights": null,
+    "max_nights": null,
+    "available_in_same_month": false,
+    "other_host_listings_same_city": []
+  },
+  {
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 4333658,
+    "previously_booked": true,
+    "month": "2014-06",
+    "min_nights": null,
+    "max_nights": null,
+    "available_in_same_month": false,
+    "other_host_listings_same_city": []
+  },
+  {
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
     "reviewer_id": 6278540,
     "previously_booked": true,
     "month": "2013-12",
@@ -192,146 +192,250 @@
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 76102163,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 9999925,
     "previously_booked": true,
-    "month": "2024-01",
+    "month": "2014-02",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 76102163,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 9999925,
     "previously_booked": true,
-    "month": "2024-04",
+    "month": "2014-05",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 76102163,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 54090633,
     "previously_booked": true,
-    "month": "2025-05",
+    "month": "2016-02",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 76102163,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 54090633,
     "previously_booked": true,
-    "month": "2025-09",
+    "month": "2016-08",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 27979437,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 54090633,
     "previously_booked": true,
-    "month": "2023-06",
+    "month": "2017-02",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 27979437,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 191706464,
     "previously_booked": true,
-    "month": "2025-06",
+    "month": "2018-08",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 682965,
+    "listing_name": "City Place Lofts",
+    "listing_url": "https://www.airbnb.com/rooms/9140",
+    "description": "Shared space - private room with its own entrance. This spacious loft includes a huge bathroom with an oversized tub and standing shower with a half bath downstairs, private parking, and beach cruiser",
+    "host_name": "Wendell",
+    "reviewer_id": 191706464,
     "previously_booked": true,
-    "month": "2024-09",
+    "month": "2018-12",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
     "other_host_listings_same_city": []
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 682965,
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 73590,
     "previously_booked": true,
-    "month": "2024-10",
+    "month": "2010-01",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 682965,
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 73590,
     "previously_booked": true,
-    "month": "2025-05",
+    "month": "2010-02",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 32634287,
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 191306,
     "previously_booked": true,
-    "month": "2019-12",
+    "month": "2011-09",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
   },
   {
-    "listing_name": "The Zanja Shangri-La",
-    "listing_url": "https://www.airbnb.com/rooms/32963",
-    "description": "Step back in time in this sleek, recently renovated mid-century modern bungalow.  Tastefully decorated with period-specific furniture and antiques as well as rare, original music and film memorabilia,",
-    "host_name": "Spencer",
-    "reviewer_id": 32634287,
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 191306,
     "previously_booked": true,
-    "month": "2019-12",
+    "month": "2011-10",
     "min_nights": null,
     "max_nights": null,
     "available_in_same_month": false,
-    "other_host_listings_same_city": []
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
+  },
+  {
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 1366679,
+    "previously_booked": true,
+    "month": "2011-12",
+    "min_nights": null,
+    "max_nights": null,
+    "available_in_same_month": false,
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
+  },
+  {
+    "listing_name": "Burnham Beach House",
+    "listing_url": "https://www.airbnb.com/rooms/9545",
+    "description": "The \"Downing room\" comprises of a single bed plus private bath.  Please note your bathroom is downstairs from the bedroom.",
+    "host_name": "Wendy",
+    "reviewer_id": 1366679,
+    "previously_booked": true,
+    "month": "2011-12",
+    "min_nights": null,
+    "max_nights": null,
+    "available_in_same_month": false,
+    "other_host_listings_same_city": [
+      {
+        "name": "Burnham Beach Cottage 1",
+        "listing_url": "https://www.airbnb.com/rooms/13776"
+      },
+      {
+        "name": "Burnham Beach Cottage 2",
+        "listing_url": "https://www.airbnb.com/rooms/14124"
+      },
+      {
+        "name": "Burnham Beach Cottage 3",
+        "listing_url": "https://www.airbnb.com/rooms/1976085"
+      }
+    ]
   }
 ]

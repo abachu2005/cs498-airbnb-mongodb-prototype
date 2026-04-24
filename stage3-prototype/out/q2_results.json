@@ -1,0 +1,10 @@
+{
+  "city": "portland",
+  "month": "2026-06",
+  "total_neighborhoods": 95,
+  "active_neighborhoods": 93,
+  "empty_neighborhoods": [
+    "Maywood Park",
+    "Woodland Park"
+  ]
+}

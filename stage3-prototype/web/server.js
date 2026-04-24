@@ -7,6 +7,9 @@ const A = require("../src/a");
 const B = require("../src/b");
 const C = require("../src/c");
 const D = require("../src/d");
+const G = require("../src/g");
+const H = require("../src/h");
+const I = require("../src/i");
 
 const P = process.env.PORT ? Number(process.env.PORT) : 4173;
 
@@ -46,6 +49,18 @@ async function pickDates(db, c) {
   return a.length ? [a[0]._id, a[Math.min(1, a.length - 1)]._id] : null;
 }
 
+async function pickMonth(db, c) {
+  const a = await db
+    .collection("calendar")
+    .aggregate([
+      { $match: { city: c } },
+      { $group: { _id: { $substr: ["$date", 0, 7] }, n: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ])
+    .toArray();
+  return a.length ? a[Math.floor(a.length / 2)]._id : null;
+}
+
 async function boot() {
   console.log("[web] starting mongodb-memory-server");
   G_MEM = await MongoMemoryServer.create({
@@ -57,11 +72,14 @@ async function boot() {
   await G_CLIENT.connect();
   G_DB = G_CLIENT.db("airbnb_stage3");
 
-  console.log("[web] loading data (this takes ~10s on first run)");
+  console.log("[web] loading data");
   S.counts = await A.load(G_DB);
   S.dates = await pickDates(G_DB, "portland");
+  S.month_portland = await pickMonth(G_DB, "portland");
+  S.month_salem = await pickMonth(G_DB, "salem");
+  S.year_default = (S.month_portland || "2025-12").substring(0, 4);
   S.ready = true;
-  console.log("[web] ready", { counts: S.counts, q1_dates: S.dates });
+  console.log("[web] ready", { counts: S.counts, q1_dates: S.dates, q2_month: S.month_portland, q3_month: S.month_salem, q4_year: S.year_default });
 }
 
 boot().catch((e) => {
@@ -79,6 +97,9 @@ app.get("/api/health", (_req, res) => {
     err: S.err,
     counts: S.counts,
     q1_default_dates: S.dates,
+    q2_default_month: S.month_portland,
+    q3_default_month: S.month_salem,
+    q4_default_year: S.year_default,
     uptime_ms: Date.now() - S.startedAt,
   });
 });
@@ -125,6 +146,44 @@ app.get("/api/q6", async (req, res) => {
     const l = req.query.limit ? Number(req.query.limit) : 25;
     const r = await D.run(G_DB, { limit: l });
     res.json({ results: r });
+  } catch (e) {
+    res.status(500).json({ error: String(e && e.message ? e.message : e) });
+  }
+});
+
+app.get("/api/q2", async (req, res) => {
+  if (!gate(req, res)) return;
+  try {
+    const c = (req.query.city || "portland").toString();
+    const m = (req.query.month || S.month_portland || "2025-12").toString();
+    const r = await G.run(G_DB, { city: c, month: m });
+    res.json(r);
+  } catch (e) {
+    res.status(500).json({ error: String(e && e.message ? e.message : e) });
+  }
+});
+
+app.get("/api/q3", async (req, res) => {
+  if (!gate(req, res)) return;
+  try {
+    const c = (req.query.city || "salem").toString();
+    const m = (req.query.month || S.month_salem || S.month_portland || "2025-12").toString();
+    const t = (req.query.room_type || "Entire home/apt").toString();
+    const r = await H.run(G_DB, { city: c, room_type: t, month: m });
+    res.json({ city: c, month: m, room_type: t, results: r });
+  } catch (e) {
+    res.status(500).json({ error: String(e && e.message ? e.message : e) });
+  }
+});
+
+app.get("/api/q4", async (req, res) => {
+  if (!gate(req, res)) return;
+  try {
+    const c = (req.query.city || "portland").toString();
+    const y = (req.query.year || S.year_default || "2025").toString();
+    const t = (req.query.room_type || "Entire home/apt").toString();
+    const r = await I.run(G_DB, { city: c, year: y, room_type: t });
+    res.json(r);
   } catch (e) {
     res.status(500).json({ error: String(e && e.message ? e.message : e) });
   }

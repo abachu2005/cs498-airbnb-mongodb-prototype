@@ -1,0 +1,37 @@
+{
+  "city": "portland",
+  "room_type": "Entire home/apt",
+  "year": "2026",
+  "months": [
+    {
+      "month": "2026-03",
+      "listings_with_intervals": 2749,
+      "total_bookable_nights": 50547
+    },
+    {
+      "month": "2026-04",
+      "listings_with_intervals": 2563,
+      "total_bookable_nights": 48455
+    },
+    {
+      "month": "2026-05",
+      "listings_with_intervals": 2713,
+      "total_bookable_nights": 50928
+    },
+    {
+      "month": "2026-06",
+      "listings_with_intervals": 2315,
+      "total_bookable_nights": 43364
+    },
+    {
+      "month": "2026-07",
+      "listings_with_intervals": 2391,
+      "total_bookable_nights": 45930
+    },
+    {
+      "month": "2026-08",
+      "listings_with_intervals": 2351,
+      "total_bookable_nights": 46143
+    }
+  ]
+}

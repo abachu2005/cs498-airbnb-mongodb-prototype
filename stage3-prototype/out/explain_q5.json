@@ -40,21 +40,21 @@
         },
         "executionStats": {
           "executionSuccess": true,
-          "nReturned": 209,
-          "executionTimeMillis": 1,
+          "nReturned": 193340,
+          "executionTimeMillis": 1775,
           "totalKeysExamined": 0,
-          "totalDocsExamined": 4000,
+          "totalDocsExamined": 3200722,
           "executionStages": {
             "isCached": false,
             "stage": "PROJECTION_SIMPLE",
-            "nReturned": 209,
-            "executionTimeMillisEstimate": 0,
-            "works": 4001,
-            "advanced": 209,
-            "needTime": 3791,
+            "nReturned": 193340,
+            "executionTimeMillisEstimate": 1605,
+            "works": 3200723,
+            "advanced": 193340,
+            "needTime": 3007382,
             "needYield": 0,
-            "saveState": 3,
-            "restoreState": 3,
+            "saveState": 134,
+            "restoreState": 134,
             "isEOF": 1,
             "transformBy": {
               "city": 1,
@@ -68,23 +68,23 @@
                   "$regex": "^\\d{4}-12-\\d{2}$"
                 }
               },
-              "nReturned": 209,
-              "executionTimeMillisEstimate": 0,
-              "works": 4001,
-              "advanced": 209,
-              "needTime": 3791,
+              "nReturned": 193340,
+              "executionTimeMillisEstimate": 1531,
+              "works": 3200723,
+              "advanced": 193340,
+              "needTime": 3007382,
               "needYield": 0,
-              "saveState": 3,
-              "restoreState": 3,
+              "saveState": 134,
+              "restoreState": 134,
               "isEOF": 1,
               "direction": "forward",
-              "docsExamined": 4000
+              "docsExamined": 3200722
             }
           }
         }
       },
-      "nReturned": 209,
-      "executionTimeMillisEstimate": 1
+      "nReturned": 193340,
+      "executionTimeMillisEstimate": 1677
     },
     {
       "$group": {
@@ -109,16 +109,16 @@
         }
       },
       "maxAccumulatorMemoryUsageBytes": {
-        "review_count": 7208
+        "review_count": 8432
       },
-      "totalOutputDataSizeBytes": 25970,
+      "totalOutputDataSizeBytes": 30380,
       "usedDisk": false,
       "spills": 0,
       "spilledDataStorageSize": 0,
       "numBytesSpilledEstimate": 0,
       "spilledRecords": 0,
-      "nReturned": 53,
-      "executionTimeMillisEstimate": 1
+      "nReturned": 62,
+      "executionTimeMillisEstimate": 1775
     },
     {
       "$project": {
@@ -127,8 +127,8 @@
         "year": "$_id.year",
         "_id": false
       },
-      "nReturned": 53,
-      "executionTimeMillisEstimate": 1
+      "nReturned": 62,
+      "executionTimeMillisEstimate": 1775
     },
     {
       "$sort": {
@@ -137,17 +137,17 @@
           "year": 1
         }
       },
-      "totalDataSizeSortedBytesEstimate": 18921,
+      "totalDataSizeSortedBytesEstimate": 22134,
       "usedDisk": false,
       "spills": 0,
       "spilledDataStorageSize": 0,
-      "nReturned": 53,
-      "executionTimeMillisEstimate": 1
+      "nReturned": 62,
+      "executionTimeMillisEstimate": 1775
     }
   ],
   "serverInfo": {
-    "host": "wirelessprv-10-193-133-216.near.illinois.edu",
-    "port": 52397,
+    "host": "Abhinavs-MacBook-Air-1102.local",
+    "port": 63178,
     "version": "8.0.3",
     "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
   },

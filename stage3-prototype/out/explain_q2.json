@@ -1,0 +1,588 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb_stage3.calendar",
+          "parsedQuery": {
+            "$and": [
+              {
+                "available": {
+                  "$eq": true
+                }
+              },
+              {
+                "city": {
+                  "$eq": "portland"
+                }
+              },
+              {
+                "date": {
+                  "$lte": "2026-06-31"
+                }
+              },
+              {
+                "date": {
+                  "$gte": "2026-06-01"
+                }
+              }
+            ]
+          },
+          "indexFilterSet": false,
+          "queryHash": "7DE80E23",
+          "planCacheKey": "B2209F34",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "GROUP",
+              "planNodeId": 4,
+              "inputStage": {
+                "stage": "FETCH",
+                "planNodeId": 2,
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "planNodeId": 1,
+                  "keyPattern": {
+                    "city": 1,
+                    "date": 1,
+                    "available": 1
+                  },
+                  "indexName": "city_1_date_1_available_1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "city": [],
+                    "date": [],
+                    "available": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "city": [
+                      "[\"portland\", \"portland\"]"
+                    ],
+                    "date": [
+                      "[\"2026-06-01\", \"2026-06-31\"]"
+                    ],
+                    "available": [
+                      "[true, true]"
+                    ]
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s27 env: { s2 = IndexBounds(\"field #0['city']: [CollationKey(0x706f72746c616e64), CollationKey(0x706f72746c616e64)], field #1['date']: [CollationKey(0x323032362d30362d3031), CollationKey(0x\"...), s6 = {\"city\" : 1, \"date\" : 1, \"available\" : 1}, s10 = Nothing, s21 = true }",
+              "stages": "[4] project [s27 = newObj(\"_id\", s26)] \n[4] project [s26 = newObj(\"c\", s24, \"l\", s25)] \n[4] group [s24, s25] [] \n[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"6350142f-3973-4e84-a0c1-342e538dad01\" @\"city_1_date_1_available_1\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"6350142f-3973-4e84-a0c1-342e538dad01\" @\"city_1_date_1_available_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [s24 = city, s25 = listing_id] @\"6350142f-3973-4e84-a0c1-342e538dad01\" true false \n"
+            }
+          },
+          "rejectedPlans": [
+            {
+              "isCached": false,
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "city": 1,
+                "listing_id": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "available": {
+                    "$eq": true
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "city": 1,
+                    "listing_id": 1,
+                    "date": 1
+                  },
+                  "indexName": "city_1_listing_id_1_date_1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "city": [],
+                    "listing_id": [],
+                    "date": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "city": [
+                      "[\"portland\", \"portland\"]"
+                    ],
+                    "listing_id": [
+                      "[MinKey, MaxKey]"
+                    ],
+                    "date": [
+                      "[\"2026-06-01\", \"2026-06-31\"]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 3133,
+          "executionTimeMillis": 309,
+          "totalKeysExamined": 84194,
+          "totalDocsExamined": 84164,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 4,
+            "nReturned": 3133,
+            "executionTimeMillisEstimate": 75,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 17,
+            "restoreState": 17,
+            "isEOF": 1,
+            "projections": {
+              "27": "newObj(\"_id\", s26) "
+            },
+            "inputStage": {
+              "stage": "project",
+              "planNodeId": 4,
+              "nReturned": 3133,
+              "executionTimeMillisEstimate": 74,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 17,
+              "restoreState": 17,
+              "isEOF": 1,
+              "projections": {
+                "26": "newObj(\"c\", s24, \"l\", s25) "
+              },
+              "inputStage": {
+                "stage": "group",
+                "planNodeId": 4,
+                "nReturned": 3133,
+                "executionTimeMillisEstimate": 74,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 17,
+                "restoreState": 17,
+                "isEOF": 1,
+                "groupBySlots": [
+                  24,
+                  25
+                ],
+                "usedDisk": false,
+                "spills": 0,
+                "spilledBytes": 0,
+                "spilledRecords": 0,
+                "spilledDataStorageSize": 0,
+                "inputStage": {
+                  "stage": "nlj",
+                  "planNodeId": 2,
+                  "nReturned": 84164,
+                  "executionTimeMillisEstimate": 71,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 17,
+                  "restoreState": 17,
+                  "isEOF": 1,
+                  "totalDocsExamined": 84164,
+                  "totalKeysExamined": 84194,
+                  "collectionScans": 0,
+                  "collectionSeeks": 84164,
+                  "indexScans": 0,
+                  "indexSeeks": 1,
+                  "indexesUsed": [
+                    "city_1_date_1_available_1",
+                    "city_1_date_1_available_1"
+                  ],
+                  "innerOpens": 84164,
+                  "innerCloses": 1,
+                  "outerProjects": [],
+                  "outerCorrelated": [
+                    16,
+                    17,
+                    18,
+                    19,
+                    20
+                  ],
+                  "outerStage": {
+                    "stage": "branch",
+                    "planNodeId": 1,
+                    "nReturned": 84164,
+                    "executionTimeMillisEstimate": 17,
+                    "opens": 1,
+                    "closes": 1,
+                    "saveState": 17,
+                    "restoreState": 17,
+                    "isEOF": 1,
+                    "numTested": 1,
+                    "thenBranchOpens": 1,
+                    "thenBranchCloses": 1,
+                    "elseBranchOpens": 0,
+                    "elseBranchCloses": 0,
+                    "filter": "s21 ",
+                    "thenSlots": [
+                      1,
+                      3,
+                      4,
+                      5,
+                      6
+                    ],
+                    "elseSlots": [
+                      7,
+                      13,
+                      14,
+                      15,
+                      6
+                    ],
+                    "outputSlots": [
+                      16,
+                      17,
+                      18,
+                      19,
+                      20
+                    ],
+                    "thenStage": {
+                      "stage": "ixscan_generic",
+                      "planNodeId": 1,
+                      "nReturned": 84164,
+                      "executionTimeMillisEstimate": 17,
+                      "opens": 1,
+                      "closes": 1,
+                      "saveState": 17,
+                      "restoreState": 17,
+                      "isEOF": 1,
+                      "indexName": "city_1_date_1_available_1",
+                      "keysExamined": 84194,
+                      "seeks": 30,
+                      "numReads": 84194,
+                      "indexKeySlot": 5,
+                      "recordIdSlot": 1,
+                      "snapshotIdSlot": 3,
+                      "indexIdentSlot": 4,
+                      "outputSlots": [],
+                      "indexKeysToInclude": "00000000000000000000000000000000"
+                    },
+                    "elseStage": {
+                      "stage": "nlj",
+                      "planNodeId": 1,
+                      "nReturned": 0,
+                      "executionTimeMillisEstimate": 0,
+                      "opens": 0,
+                      "closes": 0,
+                      "saveState": 17,
+                      "restoreState": 17,
+                      "isEOF": 0,
+                      "totalDocsExamined": 0,
+                      "totalKeysExamined": 0,
+                      "collectionScans": 0,
+                      "collectionSeeks": 0,
+                      "indexScans": 0,
+                      "indexSeeks": 0,
+                      "indexesUsed": [
+                        "city_1_date_1_available_1"
+                      ],
+                      "innerOpens": 0,
+                      "innerCloses": 0,
+                      "outerProjects": [],
+                      "outerCorrelated": [
+                        8,
+                        9
+                      ],
+                      "outerStage": {
+                        "stage": "project",
+                        "planNodeId": 1,
+                        "nReturned": 0,
+                        "executionTimeMillisEstimate": 0,
+                        "opens": 0,
+                        "closes": 0,
+                        "saveState": 17,
+                        "restoreState": 17,
+                        "isEOF": 0,
+                        "projections": {
+                          "8": "getField(s11, \"l\") ",
+                          "9": "getField(s11, \"h\") "
+                        },
+                        "inputStage": {
+                          "stage": "unwind",
+                          "planNodeId": 1,
+                          "nReturned": 0,
+                          "executionTimeMillisEstimate": 0,
+                          "opens": 0,
+                          "closes": 0,
+                          "saveState": 17,
+                          "restoreState": 17,
+                          "isEOF": 0,
+                          "inputSlot": 10,
+                          "outSlot": 11,
+                          "outIndexSlot": 12,
+                          "preserveNullAndEmptyArrays": 0,
+                          "inputStage": {
+                            "stage": "limit",
+                            "planNodeId": 1,
+                            "nReturned": 0,
+                            "executionTimeMillisEstimate": 0,
+                            "opens": 0,
+                            "closes": 0,
+                            "saveState": 17,
+                            "restoreState": 17,
+                            "isEOF": 0,
+                            "inputStage": {
+                              "stage": "coscan",
+                              "planNodeId": 1,
+                              "nReturned": 0,
+                              "executionTimeMillisEstimate": 0,
+                              "opens": 0,
+                              "closes": 0,
+                              "saveState": 17,
+                              "restoreState": 17,
+                              "isEOF": 0
+                            }
+                          }
+                        }
+                      },
+                      "innerStage": {
+                        "stage": "ixseek",
+                        "planNodeId": 1,
+                        "nReturned": 0,
+                        "executionTimeMillisEstimate": 0,
+                        "opens": 0,
+                        "closes": 0,
+                        "saveState": 17,
+                        "restoreState": 17,
+                        "isEOF": 0,
+                        "indexName": "city_1_date_1_available_1",
+                        "keysExamined": 0,
+                        "seeks": 0,
+                        "numReads": 0,
+                        "indexKeySlot": 15,
+                        "recordIdSlot": 7,
+                        "snapshotIdSlot": 13,
+                        "indexIdentSlot": 14,
+                        "outputSlots": [],
+                        "indexKeysToInclude": "00000000000000000000000000000000",
+                        "seekKeyLow": "s8 ",
+                        "seekKeyHigh": "s9 "
+                      }
+                    }
+                  },
+                  "innerStage": {
+                    "stage": "limit",
+                    "planNodeId": 2,
+                    "nReturned": 84164,
+                    "executionTimeMillisEstimate": 54,
+                    "opens": 84164,
+                    "closes": 1,
+                    "saveState": 17,
+                    "restoreState": 17,
+                    "isEOF": 1,
+                    "limit": 1,
+                    "inputStage": {
+                      "stage": "seek",
+                      "planNodeId": 2,
+                      "nReturned": 84164,
+                      "executionTimeMillisEstimate": 54,
+                      "opens": 84164,
+                      "closes": 1,
+                      "saveState": 17,
+                      "restoreState": 17,
+                      "isEOF": 0,
+                      "numReads": 84164,
+                      "recordSlot": 22,
+                      "recordIdSlot": 23,
+                      "seekRecordIdSlot": 16,
+                      "snapshotIdSlot": 17,
+                      "indexIdentSlot": 18,
+                      "indexKeySlot": 19,
+                      "indexKeyPatternSlot": 20,
+                      "scanFieldNames": [
+                        "city",
+                        "listing_id"
+                      ],
+                      "scanFieldSlots": [
+                        24,
+                        25
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 3133,
+      "executionTimeMillisEstimate": 75
+    },
+    {
+      "$lookup": {
+        "from": "listings",
+        "as": "n",
+        "let": {
+          "c": "$_id.c",
+          "l": "$_id.l"
+        },
+        "pipeline": [
+          {
+            "$match": {
+              "$expr": {
+                "$and": [
+                  {
+                    "$eq": [
+                      "$city",
+                      "$$c"
+                    ]
+                  },
+                  {
+                    "$eq": [
+                      "$listing_id",
+                      "$$l"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$project": {
+              "_id": 0,
+              "neighborhood": 1
+            }
+          }
+        ],
+        "unwinding": {
+          "preserveNullAndEmptyArrays": false
+        }
+      },
+      "totalDocsExamined": 3134,
+      "totalKeysExamined": 3134,
+      "collectionScans": 0,
+      "indexesUsed": [
+        "city_1_listing_id_1"
+      ],
+      "nReturned": 3133,
+      "executionTimeMillisEstimate": 309
+    },
+    {
+      "$group": {
+        "_id": {
+          "c": "$_id.c",
+          "n": "$n.neighborhood"
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {},
+      "totalOutputDataSizeBytes": 43941,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 93,
+      "executionTimeMillisEstimate": 309
+    }
+  ],
+  "serverInfo": {
+    "host": "Abhinavs-MacBook-Air-1102.local",
+    "port": 63178,
+    "version": "8.0.3",
+    "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "calendar",
+    "pipeline": [
+      {
+        "$match": {
+          "city": "portland",
+          "date": {
+            "$gte": "2026-06-01",
+            "$lte": "2026-06-31"
+          },
+          "available": true
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "c": "$city",
+            "l": "$listing_id"
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "listings",
+          "let": {
+            "c": "$_id.c",
+            "l": "$_id.l"
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$and": [
+                    {
+                      "$eq": [
+                        "$city",
+                        "$$c"
+                      ]
+                    },
+                    {
+                      "$eq": [
+                        "$listing_id",
+                        "$$l"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "neighborhood": 1
+              }
+            }
+          ],
+          "as": "n"
+        }
+      },
+      {
+        "$unwind": "$n"
+      },
+      {
+        "$group": {
+          "_id": {
+            "c": "$_id.c",
+            "n": "$n.neighborhood"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb_stage3"
+  },
+  "ok": 1
+}

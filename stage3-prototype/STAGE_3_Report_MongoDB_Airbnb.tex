@@ -1,5 +1,5 @@
 \documentclass[10pt]{article}
-\usepackage[margin=0.72in,top=0.6in,bottom=0.6in]{geometry}
+\usepackage[margin=0.7in,top=0.55in,bottom=0.55in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
@@ -11,15 +11,15 @@
 \usepackage{enumitem}
 \usepackage{titlesec}
 
-\setstretch{1.0}
+\setstretch{0.98}
 \tolerance=400
 \emergencystretch=1em
-\setlength{\parskip}{2pt plus 1pt}
+\setlength{\parskip}{1.5pt plus 1pt}
 \setlength{\parindent}{0.7em}
 \hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
 \setlist{nosep,leftmargin=1.3em,topsep=2pt,partopsep=0pt}
-\titlespacing*{\section}{0pt}{6pt plus 2pt}{3pt}
-\titlespacing*{\subsection}{0pt}{4pt plus 1pt}{2pt}
+\titlespacing*{\section}{0pt}{4pt plus 2pt}{2pt}
+\titlespacing*{\subsection}{0pt}{3pt plus 1pt}{1pt}
 \titleformat{\section}{\normalfont\bfseries\large}{\thesection.}{0.5em}{}
 \titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection}{0.5em}{}
 
@@ -32,8 +32,8 @@
   framesep=2pt,
   xleftmargin=3pt,
   xrightmargin=3pt,
-  aboveskip=3pt,
-  belowskip=3pt,
+  aboveskip=2pt,
+  belowskip=2pt,
 }
 
 \title{\vspace{-2.0em}Task 3 -- Prototype Implementation: MongoDB + AirBnB\vspace{-0.4em}}
@@ -46,29 +46,36 @@
 
 \section{Stage 3 Goal and Scope}
 
-Stage~2 designed four collections (\texttt{listings}, \texttt{calendar}, \texttt{reviews}, \texttt{neighborhoods}), eight compound indexes, and pseudocode for all six AirBnB queries. Stage~3 turns that design into a working prototype that boots MongoDB via \texttt{mongodb-memory-server}, loads real InsideAirbnb data for four cities (Los Angeles, Portland, Salem, San Diego), and runs three of the six queries end-to-end with \texttt{explain('executionStats')} captured so we can show \emph{actual} index usage rather than promised index usage. The schema and indexes are unchanged from Stage~2~\S2.2; everything else---loader, queries, driver, evidence---is new in \texttt{stage3-prototype/}. The prototype runs with one \texttt{npm~start} in under 10\,s on a laptop, no external Mongo required.
-
-\section{Implemented Subset (3 of 6 Queries)}
-
-We picked Q1, Q5, and Q6 because together they cover the three distinct query \emph{styles}. \textbf{Q1} (Portland 2-day search) demonstrates filter\,+\,group\,+\,lookup\,+\,sort and exercises both the \texttt{calendar} date index and the \texttt{listings} unique key. \textbf{Q5} (December reviews per city per year) is a pure aggregation over \texttt{reviews}. \textbf{Q6} (re-book reminder + same-host listings) is multi-step orchestration touching all four collections. We skipped Q3/Q4 because both rely on the same run-segmentation logic Stage~2 flagged as awkward in pure aggregation, and Q2 is essentially a set difference on the same \texttt{calendar} index pattern as Q1.
+Stage~2 designed four collections (\texttt{listings}, \texttt{calendar}, \texttt{reviews}, \texttt{neighborhoods}), eight compound indexes, and pseudocode for all six AirBnB queries. Stage~3 turns that design into a working prototype that boots MongoDB via \texttt{mongodb-memory-server}, loads the \emph{full} InsideAirbnb datasets for four cities (Los Angeles, Portland, Salem, San Diego), and runs \textbf{all six queries} end-to-end with \texttt{explain('executionStats')} captured so we show \emph{actual} index usage rather than promised index usage. The schema and indexes are unchanged from Stage~2~\S2.2; everything else---loader, six query modules, driver, web demo UI, evidence---is new in \texttt{stage3-prototype/}. The prototype boots with one \texttt{npm~start} (no external Mongo required) or with \texttt{npm~run~web} for an interactive single-page UI.
 
 \section{Loader Architecture and Data Volume}
 
-\texttt{src/a.js} streams \texttt{listings.csv.gz}, \texttt{reviews.csv.gz}, \texttt{calendar.csv.gz}, and \texttt{neighbourhoods.csv} from \texttt{data.insideairbnb.com} through \texttt{zlib.createGunzip()} into \texttt{csv-parse} (no full CSV ever held in memory), cleans rows (currency strip, \texttt{t/f} to boolean, neighborhood dedup), bulk-inserts, and creates the eight Stage~2 indexes. Recorded run: \textbf{1{,}780 listings, 4{,}000 reviews, 411 neighborhoods, 8{,}000 calendar rows}---enough for every query to return non-empty results, small enough to iterate on queries in seconds. Evidence at \texttt{stage3-prototype/out/load\_evidence.txt}.
+\texttt{src/a.js} streams \texttt{listings.csv.gz}, \texttt{reviews.csv.gz}, \texttt{calendar.csv.gz}, and \texttt{neighbourhoods.csv} from \texttt{data.insideairbnb.com} through \texttt{zlib.createGunzip()} into \texttt{csv-parse} (no full CSV ever held in memory), batches inserts at 2--10\,k rows per call so heap stays bounded, cleans rows (currency strip, \texttt{t/f}\,$\to$\,boolean, neighborhood dedup), and creates the eight Stage~2 indexes after load. Per-collection caps are configurable via \texttt{LIMIT\_*} env vars but default to \emph{none}. Recorded full-data run: \textbf{63{,}482 listings, 3{,}200{,}722 reviews, 481 neighborhoods, 23{,}170{,}957 calendar rows} (LA: 45.6k listings / 16.6M calendar; Portland: 4.5k / 1.6M; Salem: 280 / 102k; San Diego: 13.2k / 4.8M)---the entire InsideAirbnb snapshot for all four cities, no row caps. Total load + index time on a laptop: $\sim$6.5\,minutes. Full per-city counts and a sample-document dump live at \texttt{stage3-prototype/out/load\_evidence.txt}.
 
 \section{Query Implementations and Execution Plans}
 
+All six queries live as standalone modules (\texttt{src/b.js}\,Q1, \texttt{src/g.js}\,Q2, \texttt{src/h.js}\,Q3, \texttt{src/i.js}\,Q4, \texttt{src/c.js}\,Q5, \texttt{src/d.js}\,Q6). The driver runs every query, writes results to \texttt{out/qN\_results.json} and the planner output to \texttt{out/explain\_qN.json}.
+
 \subsection{Q1 -- Portland 2-day search}
 \begin{lstlisting}
-[ {$match: {city:"portland", date:{$in:dates}, available:true}},
-  {$group: {_id:"$listing_id", a:{$sum:1}}}, {$match:{a:dates.length}},
+[ {$match:{city:"portland", date:{$in:dates}, available:true}},
+  {$group:{_id:"$listing_id", a:{$sum:1}}}, {$match:{a:dates.length}},
   {$lookup:{from:"listings", let:{l:"$_id"}, as:"b", pipeline:[
      {$match:{$expr:{$and:[{$eq:["$city","portland"]},{$eq:["$listing_id","$$l"]}]}}},
      {$project:{_id:0,name:1,neighborhood:1,room_type:1,accommodates:1,property_type:1,price:1,review_scores_rating:1}}]}},
   {$unwind:"$b"},{$replaceRoot:{newRoot:"$b"}},
   {$sort:{review_scores_rating:-1, listing_id:1}}, {$limit:25} ]
 \end{lstlisting}
-The driver picks the demo dates dynamically by querying for the earliest pair of consecutive available dates in Portland, so the query always has live data to operate on. \textbf{Plan} (from \texttt{out/explain\_q1.json}): the leading \texttt{\$match} hits \texttt{IXSCAN} on \texttt{city\_1\_date\_1\_available\_1} with bounds locked to Portland and the two requested dates. \texttt{nReturned=3, totalKeysExamined=6, totalDocsExamined=6, executionTimeMillis=3}---one key and one document per matching \texttt{(listing,~date)} pair. The \texttt{\$lookup} hits \texttt{city\_1\_listing\_id\_1} (unique) for 3 doc reads. The \texttt{\$sort} runs over 3 docs with no spill. Top result in the recorded run: ``Beautiful Apt near City Center!'' (Irvington, rating 4.94) for window 2025-12-04~/~2025-12-05.
+The driver picks demo dates dynamically (earliest pair of consecutive available Portland dates), so the query always has live data. \textbf{Plan} (full-data run, \texttt{out/explain\_q1.json}): leading \texttt{\$match} hits \texttt{IXSCAN} on \texttt{calendar~\{city,~date,~available\}} with bounds locked to Portland and the two requested dates; \texttt{nReturned=1826}, \texttt{totalKeysExamined=3012}, \texttt{totalDocsExamined=3012}, \texttt{executionTimeMillis=112}---one key+doc per \texttt{(listing,~date)} match across the 1.6M-row Portland calendar partition, then \texttt{\$lookup} hits unique \texttt{listings~\{city,~listing\_id\}} for 1.8k point reads, and \texttt{\$limit:25} caps the output.
+
+\subsection{Q2 -- Empty neighborhoods in a month}
+Aggregate \texttt{calendar} for the target city/month with \texttt{available:true}, group by \texttt{listing\_id}, \texttt{\$lookup} each listing's \texttt{neighborhood}, project a set of ``active'' neighborhoods, then anti-join in app code against the full \texttt{neighborhoods} list for that city. Returns the dark neighborhoods (zero available nights). \textbf{Plan:} leading \texttt{\$match} hits \texttt{calendar~\{city,~date,~available\}} with bounds locked to the month range; the lookup hits unique \texttt{listings~\{city,~listing\_id\}}; the final neighborhood pull is a covered scan of \texttt{neighborhoods~\{city,~neighborhood\}}.
+
+\subsection{Q3 -- Salem entire-home availability windows}
+For each Salem entire-home listing (one indexed \texttt{find} on \texttt{listings~\{city,~neighborhood,~room\_type\}}), pull the month's calendar rows in one \texttt{find} on \texttt{calendar~\{city,~listing\_id,~date\}} sorted by listing then date. App-side scan turns each contiguous run of \texttt{available:true} days into intervals, keeping only days where \emph{remaining-run-length} $\geq$ that day's \texttt{minimum\_nights}---i.e., we exclude days that look free but are actually unbookable because no valid stay fits. Output: per-listing intervals \{from, to, min\_nights\}.
+
+\subsection{Q4 -- Portland March--August booking trend}
+Loops Q3's interval logic over the six target months for Portland entire-home listings and sums each month's bookable nights. Output: \texttt{[\{month,~listings\_with\_intervals,~total\_bookable\_nights\}]}. Same indexes as Q3; six passes over the same access path.
 
 \subsection{Q5 -- December reviews per city per year}
 \begin{lstlisting}
@@ -77,28 +84,20 @@ The driver picks the demo dates dynamically by querying for the earliest pair of
   {$project:{_id:0, city:"$_id.city", year:"$_id.year", review_count:1}},
   {$sort:{city:1, year:1}} ]
 \end{lstlisting}
-Returned 53~(city,~year) groups in 2~ms over 4{,}000 docs in the recorded run. This is a full-collection aggregation by design---every December review must be counted---so no useful index prefix applies. The Stage~2 design intentionally did not include a leading \texttt{\{date:1\}} index on \texttt{reviews} because Q5 is the only date-driven \texttt{reviews} query and it already runs in 2~ms. If \texttt{reviews} grew to 10M+ documents, adding \texttt{reviews~\{date:1\}} would be the first tuning step.
+Pure full-collection aggregation by design---every December review must be counted, no useful index prefix applies. \textbf{Plan} (\texttt{out/explain\_q5.json}): \texttt{COLLSCAN} over all 3.2\,M reviews, \texttt{nReturned=193{,}340} matching docs, \texttt{executionTimeMillis=1{,}775}---i.e., $\sim$1.8\,s to scan and group the entire reviews collection on a laptop. The Stage~2 design intentionally omits a leading \texttt{\{date:1\}} on \texttt{reviews}; Q5 is the only date-driven \texttt{reviews} query, and 1.8\,s/3.2\,M docs is well within demo budget. If \texttt{reviews} grew to 100M+ documents, adding \texttt{reviews~\{date:1\}} would be the first tuning step.
 
 \subsection{Q6 -- Re-book reminder + same-host listings}
-\textbf{Step~1} (one aggregation): group \texttt{reviews} by \texttt{(city, listing\_id, reviewer\_id)}, keep only groups with \texttt{review\_count$>$1}. \textbf{Step~2} (per group, in app code, capped at 25 records for the demo): for each prior review date, compute the month bounds, then run one \texttt{findOne} on \texttt{calendar} for in-month availability, one aggregate on \texttt{calendar} for min/max nights in that month, one \texttt{findOne} on \texttt{listings} for description and host metadata, and one \texttt{find} on \texttt{listings} for the host's other listings in the same city. Every step-2 read lands on an index already designed in Stage~2: \texttt{city\_1\_listing\_id\_1\_date\_1} for calendar, \texttt{city\_1\_listing\_id\_1} (unique) and \texttt{host\_id\_1\_city\_1} for listings. \textbf{We did not have to define a single new index for Q6}, which is itself a validation of the Stage~2 index design. Recorded run produced 25 enriched records, including repeat reviews for ``RUN Runyon, Beau Furn Rms Terrace Hollyw Hill View'' (host \emph{Chas.}) with one other same-host listing in Los Angeles. Decomposing this query into one aggregation plus a small handful of indexed point reads---rather than one giant nested-\texttt{\$lookup} pipeline---kept the code straight-line and easy to debug, and incurred essentially no runtime cost because every read hits an index.
+\textbf{Step~1} (one aggregation): group \texttt{reviews} by \texttt{(city, listing\_id, reviewer\_id)}, keep \texttt{review\_count$>$1}. \textbf{Step~2} per group (capped at 25 for the demo): one \texttt{findOne} on \texttt{calendar~\{city,~listing\_id,~date\}} for in-month availability, one aggregate over the same index for min/max nights, one \texttt{findOne} on \texttt{listings~\{city,~listing\_id\}} for description and host metadata, one \texttt{find} on \texttt{listings~\{host\_id,~city\}} for the host's other listings in the same city. Every step-2 read lands on an index already designed in Stage~2---\textbf{Q6 needed no new indexes}, validating the design.
 
-\section{Critique: What We'd Change}
+\section{Critique and Lessons}
 
-(1)~\textbf{Date-as-string was the right call but for the wrong stated reason.} Stage~2 justified storing dates as ISO strings primarily on storage grounds. In practice, the bigger payoff turned out to be \emph{query simplicity}: Q5's \texttt{\$substr} extraction stays trivial and is regex-prefix-indexable, whereas \texttt{\$year}/\texttt{\$month} on a true \texttt{Date} forces a per-document compute that no index can short-circuit. We would re-frame the trade-off in Stage~2's design rationale.
+\textbf{(1) Date-as-string was right but for the wrong stated reason.} Stage~2 justified ISO-string dates on storage. The bigger payoff is \emph{query simplicity}: Q5's \texttt{\$substr} is regex-prefix-indexable, Q3/Q4's calendar walk is just string comparison, whereas \texttt{\$year}/\texttt{\$month} on a true \texttt{Date} forces a per-document compute that no index can short-circuit. \textbf{(2) The \texttt{host\_id\_1\_city\_1} index has the wrong key order.} Reversing it to \texttt{\{city, host\_id\}} would share a \texttt{city} prefix with our three other listings indexes and be more consistent. \textbf{(3) \texttt{neighborhoods} could be embedded as one document per city}; Q2 would then skip the \texttt{\$lookup} entirely.
 
-(2)~\textbf{The \texttt{host\_id\_1\_city\_1} index has the wrong key order.} Stage~2 chose this for Q6's same-host lookup. In actual use the lookup also filters by \texttt{listing\_id$\neq$current}, and cardinality is dominated by \texttt{host\_id} (most hosts have 1--2 listings). Reversing it to \texttt{\{city, host\_id\}} would let the index share a \texttt{city} prefix with our three other listings indexes (\texttt{\{city, listing\_id\}}, \texttt{\{city, neighborhood, room\_type\}}), which is more consistent with the rest of the design. The current order is correct, just slightly off-pattern.
-
-(3)~\textbf{\texttt{neighborhoods} could be embedded as a per-city array.} It is essentially a small read-only join lookup table. If we ever needed Q2 frequently, promoting the canonical neighborhood list into a one-document-per-city ``city metadata'' shape would let us skip the \texttt{\$lookup} entirely.
-
-\section{Lessons Learned and Advice}
-
-\textbf{Lessons.} \texttt{mongodb-memory-server} shrinks the design loop to seconds and should be the default for prototyping. \texttt{explain('executionStats')} is the single most valuable design-validation tool we used---one line of \texttt{.explain()} per query turned guessed index usage into proven index usage. Multi-step orchestration in application code (Q6) is meaningfully easier to read and debug than a single deeply-nested \texttt{\$lookup} aggregation, and at our scale costs essentially nothing because each per-record read still hits an index. Schema design happens at \emph{index}-design time, not at collection-design time: every query's actual performance was determined by compound-index choices, not by document shape.
-
-\textbf{Advice.} Pick one query first and design every collection and every index around it; only then add the second. Doing all six in one pass tempts you into ``just-in-case'' indexes (we did this with \texttt{host\_id\_1\_city\_1}). Start with \texttt{mongodb-memory-server}, not Atlas---switching is one URI change. Always commit \texttt{explain} output alongside your query results so reviewers (and future you) can verify what the planner is actually doing. Resist the temptation to denormalize early: we considered embedding \texttt{calendar} arrays inside \texttt{listings} and the cost of being wrong about that compounds quickly.
+\textbf{Lessons.} \texttt{mongodb-memory-server} shrinks the design loop to seconds; it is the right default for prototyping. \texttt{explain('executionStats')} is the single most valuable tool we used---one line of \texttt{.explain()} per query turns guessed index usage into proven index usage. Multi-step orchestration in app code (Q6, Q3, Q4) is meaningfully easier to read and debug than deeply-nested \texttt{\$lookup} pipelines, and at our scale costs essentially nothing because every read hits an index. \textbf{Advice.} Pick one query first and design every collection and every index around it; only then add the next. Doing all six in one pass tempts you into ``just-in-case'' indexes (we did this with \texttt{host\_id\_1\_city\_1}). Always commit \texttt{explain} output alongside results so reviewers (and future you) can verify what the planner is actually doing.
 
 \section{My Role in the Project}
 
-I led infrastructure and data ingestion for the prototype. Concretely: I scaffolded the \texttt{stage3-prototype/} project, picked \texttt{mongodb-memory-server} so the team could iterate on queries without an Atlas account, and wrote the loader (\texttt{src/a.js})---streaming gzipped CSVs from \texttt{data.insideairbnb.com} through \texttt{zlib} and \texttt{csv-parse}, normalizing types, deduplicating neighborhoods to satisfy the unique index, and bulk-inserting into the four collections with all eight Stage~2 indexes built right after. I also wrote the driver (\texttt{src/e.js}) that boots the in-process Mongo, calls the loader, runs all three queries, captures the \texttt{explain('executionStats')} output, and writes everything in \texttt{out/} so the evidence is reproducible. On the query side, I implemented Q1 (Portland 2-day search) including the dynamic date-picking helper that finds the earliest pair of consecutive available Portland dates so the demo always returns live results. Outside of code, I owned the GitHub repository (\texttt{cs498-airbnb-mongodb-prototype}), wrote the top-level \texttt{README}, and built the PDF generation pipeline (\texttt{tectonic} for the report, \texttt{md-to-pdf} for the slide outline). The biggest single decision I argued for was \emph{not} setting up Atlas in week~1: spinning up a real cluster early would have cost us several days of glue work, while the in-process server let us focus on schema and query correctness from day one. Throughout, I worked closely with my teammates: I integrated their query implementations into the driver and re-ran the evidence pipeline whenever the schema or query logic changed.
+I led infrastructure, data ingestion, and demo UI for the prototype. Concretely: I scaffolded \texttt{stage3-prototype/}, picked \texttt{mongodb-memory-server} so the team could iterate on queries without an Atlas account, and wrote the loader (\texttt{src/a.js})---streaming gzipped CSVs from \texttt{data.insideairbnb.com} through \texttt{zlib} and \texttt{csv-parse}, batching inserts so the full multi-million-row load fits in memory, normalizing types, deduplicating neighborhoods to satisfy the unique index, and creating all eight Stage~2 indexes. I also wrote the driver (\texttt{src/e.js}) that boots in-process Mongo, calls the loader, runs every query end-to-end, captures \texttt{explain('executionStats')} for each, and writes everything in \texttt{out/} for reproducibility. On the query side I implemented Q1 (Portland 2-day search) including the dynamic date-picking helper that finds the earliest pair of consecutive available Portland dates so the demo always returns live results. I built the demo UI (\texttt{web/}, vanilla HTML/CSS/JS over an Express server that wraps the same query modules so the report and the UI run identical code), and I owned the GitHub repository (\texttt{cs498-airbnb-mongodb-prototype}), the top-level \texttt{README}, and the PDF generation pipeline (\texttt{tectonic} for the report, \texttt{md-to-pdf} for the slide outline). The biggest decision I argued for was \emph{not} setting up Atlas in week~1: the in-process server let us focus on schema and query correctness from day one, and ``switch to Atlas'' is one URI change away. I integrated my teammates' query implementations into the driver and the web UI, and re-ran the evidence pipeline whenever the schema or query logic changed.
 
 \newpage
 \section{References}

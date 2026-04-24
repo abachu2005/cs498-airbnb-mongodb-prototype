@@ -30,7 +30,20 @@ const S = {
   },
 };
 
-const L = { listings: 500, reviews: 1000, neighborhoods: 200, calendar: 2000 };
+function envN(k, d) {
+  const v = process.env[k];
+  if (v == null || v === "") return d;
+  if (v === "all" || v === "ALL" || v === "Infinity") return Infinity;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : d;
+}
+
+const L = {
+  listings: envN("LIMIT_LISTINGS", Infinity),
+  reviews: envN("LIMIT_REVIEWS", Infinity),
+  neighborhoods: envN("LIMIT_NEIGHBORHOODS", Infinity),
+  calendar: envN("LIMIT_CALENDAR", Infinity),
+};
 
 async function f(u, n, g) {
   const r = await fetch(u);
@@ -50,7 +63,71 @@ async function f(u, n, g) {
   }
   const t = Buffer.from(await r.arrayBuffer()).toString("utf-8");
   const w = ps(t, { columns: true, skip_empty_lines: true, relax_column_count: true, relax_quotes: true });
-  return w.slice(0, n);
+  return n === Infinity ? w : w.slice(0, n);
+}
+
+async function fStream(u, n, g, fn, sink) {
+  const r = await fetch(u);
+  if (!r.ok) throw new Error(`HTTP ${r.status} ${u}`);
+  if (!g) {
+    const t = Buffer.from(await r.arrayBuffer()).toString("utf-8");
+    const w = ps(t, { columns: true, skip_empty_lines: true, relax_column_count: true, relax_quotes: true });
+    const a = n === Infinity ? w : w.slice(0, n);
+    let c = 0;
+    for (const r of a) {
+      const v = fn(r);
+      if (v) {
+        sink.push(v);
+        c++;
+      }
+    }
+    await sink.flush();
+    return c;
+  }
+  const a = Readable.fromWeb(r.body);
+  const b = z.createGunzip();
+  const c = a.pipe(b).pipe(p({ columns: true, skip_empty_lines: true, relax_column_count: true, relax_quotes: true }));
+  let i = 0;
+  for await (const e of c) {
+    if (i >= n) {
+      c.destroy();
+      break;
+    }
+    const v = fn(e);
+    if (v) await sink.push(v);
+    i++;
+  }
+  await sink.flush();
+  b.destroy();
+  a.destroy();
+  return i;
+}
+
+function makeSink(coll, batch) {
+  const b = batch || 5000;
+  let buf = [];
+  let total = 0;
+  return {
+    async push(d) {
+      buf.push(d);
+      if (buf.length >= b) {
+        const x = buf;
+        buf = [];
+        await coll.insertMany(x, { ordered: false });
+        total += x.length;
+      }
+    },
+    async flush() {
+      if (buf.length) {
+        await coll.insertMany(buf, { ordered: false });
+        total += buf.length;
+        buf = [];
+      }
+    },
+    get total() {
+      return total;
+    },
+  };
 }
 
 function n(v) {
@@ -113,59 +190,59 @@ function dc(c, r) {
 }
 
 async function load(db) {
-  const a = [];
-  const b = [];
-  const c = [];
-  const d = [];
+  const lc = db.collection("listings");
+  const rc = db.collection("reviews");
+  const nc = db.collection("neighborhoods");
+  const cc = db.collection("calendar");
+
+  const seen = new Set();
+
+  let TL = 0;
+  let TR = 0;
+  let TN = 0;
+  let TC = 0;
 
   for (const [k, v] of Object.entries(S)) {
     console.log(`[loader] ${k} listings`);
-    const e = await f(v.listings, L.listings, true);
-    a.push(...e.map((r) => dl(k, r)));
+    const sL = makeSink(lc, 2000);
+    TL += await fStream(v.listings, L.listings, true, (r) => dl(k, r), sL);
 
     console.log(`[loader] ${k} reviews`);
-    const g = await f(v.reviews, L.reviews, true);
-    b.push(...g.map((r) => dr(k, r)));
+    const sR = makeSink(rc, 5000);
+    TR += await fStream(v.reviews, L.reviews, true, (r) => dr(k, r), sR);
 
     console.log(`[loader] ${k} neighborhoods`);
-    const h = await f(v.neighborhoods, L.neighborhoods, false);
-    const i = new Set();
-    for (const r of h) {
+    const sN = makeSink(nc, 1000);
+    TN += await fStream(v.neighborhoods, L.neighborhoods, false, (r) => {
       const m = dn(k, r);
+      if (!m.neighborhood) return null;
       const q = `${m.city}|${m.neighborhood}`;
-      if (m.neighborhood && !i.has(q)) {
-        i.add(q);
-        c.push(m);
-      }
-    }
+      if (seen.has(q)) return null;
+      seen.add(q);
+      return m;
+    }, sN);
 
     console.log(`[loader] ${k} calendar`);
-    const j = await f(v.calendar, L.calendar, true);
-    d.push(...j.map((r) => dc(k, r)));
+    const sC = makeSink(cc, 10000);
+    TC += await fStream(v.calendar, L.calendar, true, (r) => dc(k, r), sC);
   }
 
-  console.log("[loader] inserting");
-  if (a.length) await db.collection("listings").insertMany(a, { ordered: false });
-  if (b.length) await db.collection("reviews").insertMany(b, { ordered: false });
-  if (c.length) await db.collection("neighborhoods").insertMany(c, { ordered: false });
-  if (d.length) await db.collection("calendar").insertMany(d, { ordered: false });
-
   console.log("[loader] indexing");
-  await db.collection("listings").createIndex({ city: 1, listing_id: 1 }, { unique: true });
-  await db.collection("listings").createIndex({ city: 1, neighborhood: 1, room_type: 1 });
-  await db.collection("listings").createIndex({ host_id: 1, city: 1 });
-  await db.collection("calendar").createIndex({ city: 1, listing_id: 1, date: 1 });
-  await db.collection("calendar").createIndex({ city: 1, date: 1, available: 1 });
-  await db.collection("reviews").createIndex({ city: 1, listing_id: 1, date: 1 });
-  await db.collection("reviews").createIndex({ reviewer_id: 1, listing_id: 1, date: 1 });
-  await db.collection("neighborhoods").createIndex({ city: 1, neighborhood: 1 }, { unique: true });
+  await lc.createIndex({ city: 1, listing_id: 1 }, { unique: true });
+  await lc.createIndex({ city: 1, neighborhood: 1, room_type: 1 });
+  await lc.createIndex({ host_id: 1, city: 1 });
+  await cc.createIndex({ city: 1, listing_id: 1, date: 1 });
+  await cc.createIndex({ city: 1, date: 1, available: 1 });
+  await rc.createIndex({ city: 1, listing_id: 1, date: 1 });
+  await rc.createIndex({ reviewer_id: 1, listing_id: 1, date: 1 });
+  await nc.createIndex({ city: 1, neighborhood: 1 }, { unique: true });
 
-  return {
-    listings: a.length,
-    reviews: b.length,
-    neighborhoods: c.length,
-    calendar: d.length,
-  };
+  const cl = await lc.estimatedDocumentCount();
+  const cr = await rc.estimatedDocumentCount();
+  const cn = await nc.estimatedDocumentCount();
+  const cc2 = await cc.estimatedDocumentCount();
+
+  return { listings: cl, reviews: cr, neighborhoods: cn, calendar: cc2 };
 }
 
 module.exports = { load };

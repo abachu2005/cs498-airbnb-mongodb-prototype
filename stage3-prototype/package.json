@@ -4,8 +4,10 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "node src/e.js",
-    "web": "node web/server.js"
+    "start": "node --max-old-space-size=8192 src/e.js",
+    "start:fast": "LIMIT_LISTINGS=500 LIMIT_REVIEWS=1000 LIMIT_NEIGHBORHOODS=200 LIMIT_CALENDAR=2000 node src/e.js",
+    "web": "node --max-old-space-size=8192 web/server.js",
+    "web:fast": "LIMIT_LISTINGS=500 LIMIT_REVIEWS=1000 LIMIT_NEIGHBORHOODS=200 LIMIT_CALENDAR=2000 node web/server.js"
   },
   "dependencies": {
     "csv-parse": "^6.2.1",

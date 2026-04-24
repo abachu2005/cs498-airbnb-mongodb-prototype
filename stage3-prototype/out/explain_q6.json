@@ -65,26 +65,26 @@
             },
             "slotBasedPlan": {
               "slots": "$$RESULT=s19 env: { s5 = {\"reviewer_id\" : 1, \"listing_id\" : 1, \"date\" : 1} }",
-              "stages": "[4] project [s19 = newObj(\"_id\", s16, \"review_dates\", s17, \"review_count\", s18)] \n[4] project [s16 = newObj(\"city\", s8, \"listing_id\", s10, \"reviewer_id\", s11), s17 = getElement(s14, 0), s18 = (convert ( s15, int32) ?: s15)] \n[4] group [s8, s10, s11] [s14 = addToArrayCapped(s9, 104857600), s15 = count()] spillSlots[s12, s13] mergingExprs[aggConcatArraysCapped(s12, 104857600), sum(s13)] \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] ixscan_generic IndexBounds(\"field #0['reviewer_id']: [MinKey, null), (null, MaxKey], field #1['listing_id']: [MinKey, MaxKey], field #2['date']: [MinKey, MaxKey]\") s4 s1 s2 s3 lowPriority [] @\"086f8329-80b3-4492-93ad-d15f583abd1e\" @\"reviewer_id_1_listing_id_1_date_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = city, s9 = date, s10 = listing_id, s11 = reviewer_id] @\"086f8329-80b3-4492-93ad-d15f583abd1e\" true false \n"
+              "stages": "[4] project [s19 = newObj(\"_id\", s16, \"review_dates\", s17, \"review_count\", s18)] \n[4] project [s16 = newObj(\"city\", s8, \"listing_id\", s10, \"reviewer_id\", s11), s17 = getElement(s14, 0), s18 = (convert ( s15, int32) ?: s15)] \n[4] group [s8, s10, s11] [s14 = addToArrayCapped(s9, 104857600), s15 = count()] spillSlots[s12, s13] mergingExprs[aggConcatArraysCapped(s12, 104857600), sum(s13)] \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] ixscan_generic IndexBounds(\"field #0['reviewer_id']: [MinKey, null), (null, MaxKey], field #1['listing_id']: [MinKey, MaxKey], field #2['date']: [MinKey, MaxKey]\") s4 s1 s2 s3 lowPriority [] @\"f26d5b62-f328-4654-9c8e-43f61f4193c1\" @\"reviewer_id_1_listing_id_1_date_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = city, s9 = date, s10 = listing_id, s11 = reviewer_id] @\"f26d5b62-f328-4654-9c8e-43f61f4193c1\" true false \n"
             }
           },
           "rejectedPlans": []
         },
         "executionStats": {
           "executionSuccess": true,
-          "nReturned": 3877,
-          "executionTimeMillis": 12,
-          "totalKeysExamined": 4000,
-          "totalDocsExamined": 4000,
+          "nReturned": 3117521,
+          "executionTimeMillis": 33356,
+          "totalKeysExamined": 3200722,
+          "totalDocsExamined": 3200722,
           "executionStages": {
             "stage": "project",
             "planNodeId": 4,
-            "nReturned": 3877,
-            "executionTimeMillisEstimate": 0,
+            "nReturned": 3117521,
+            "executionTimeMillisEstimate": 27243,
             "opens": 1,
             "closes": 1,
-            "saveState": 7,
-            "restoreState": 7,
+            "saveState": 1954,
+            "restoreState": 1954,
             "isEOF": 1,
             "projections": {
               "19": "newObj(\"_id\", s16, \"review_dates\", s17, \"review_count\", s18) "
@@ -92,12 +92,12 @@
             "inputStage": {
               "stage": "project",
               "planNodeId": 4,
-              "nReturned": 3877,
-              "executionTimeMillisEstimate": 0,
+              "nReturned": 3117521,
+              "executionTimeMillisEstimate": 25701,
               "opens": 1,
               "closes": 1,
-              "saveState": 7,
-              "restoreState": 7,
+              "saveState": 1954,
+              "restoreState": 1954,
               "isEOF": 1,
               "projections": {
                 "16": "newObj(\"city\", s8, \"listing_id\", s10, \"reviewer_id\", s11) ",
@@ -107,12 +107,12 @@
               "inputStage": {
                 "stage": "group",
                 "planNodeId": 4,
-                "nReturned": 3877,
-                "executionTimeMillisEstimate": 0,
+                "nReturned": 3117521,
+                "executionTimeMillisEstimate": 24565,
                 "opens": 1,
                 "closes": 1,
-                "saveState": 7,
-                "restoreState": 7,
+                "saveState": 1954,
+                "restoreState": 1954,
                 "isEOF": 1,
                 "groupBySlots": [
                   8,
@@ -131,31 +131,31 @@
                   "12": "aggConcatArraysCapped(s12, 104857600) ",
                   "13": "sum(s13) "
                 },
-                "usedDisk": false,
-                "spills": 0,
-                "spilledBytes": 0,
-                "spilledRecords": 0,
-                "spilledDataStorageSize": 0,
+                "usedDisk": true,
+                "spills": 7,
+                "spilledBytes": 188299410,
+                "spilledRecords": 3117524,
+                "spilledDataStorageSize": 101900288,
                 "inputStage": {
                   "stage": "nlj",
                   "planNodeId": 2,
-                  "nReturned": 4000,
-                  "executionTimeMillisEstimate": 0,
+                  "nReturned": 3200722,
+                  "executionTimeMillisEstimate": 8168,
                   "opens": 1,
                   "closes": 1,
-                  "saveState": 7,
-                  "restoreState": 7,
+                  "saveState": 1954,
+                  "restoreState": 1954,
                   "isEOF": 1,
-                  "totalDocsExamined": 4000,
-                  "totalKeysExamined": 4000,
+                  "totalDocsExamined": 3200722,
+                  "totalKeysExamined": 3200722,
                   "collectionScans": 0,
-                  "collectionSeeks": 4000,
+                  "collectionSeeks": 3200722,
                   "indexScans": 0,
                   "indexSeeks": 1,
                   "indexesUsed": [
                     "reviewer_id_1_listing_id_1_date_1"
                   ],
-                  "innerOpens": 4000,
+                  "innerOpens": 3200722,
                   "innerCloses": 1,
                   "outerProjects": [],
                   "outerCorrelated": [
@@ -168,18 +168,18 @@
                   "outerStage": {
                     "stage": "ixscan_generic",
                     "planNodeId": 1,
-                    "nReturned": 4000,
-                    "executionTimeMillisEstimate": 0,
+                    "nReturned": 3200722,
+                    "executionTimeMillisEstimate": 1290,
                     "opens": 1,
                     "closes": 1,
-                    "saveState": 7,
-                    "restoreState": 7,
+                    "saveState": 1954,
+                    "restoreState": 1954,
                     "isEOF": 1,
                     "indexName": "reviewer_id_1_listing_id_1_date_1",
-                    "keysExamined": 4000,
+                    "keysExamined": 3200722,
                     "seeks": 1,
-                    "numReads": 4001,
-                    "keyCheckSkipped": 123,
+                    "numReads": 3200723,
+                    "keyCheckSkipped": 83201,
                     "indexKeySlot": 4,
                     "recordIdSlot": 1,
                     "snapshotIdSlot": 2,
@@ -190,25 +190,25 @@
                   "innerStage": {
                     "stage": "limit",
                     "planNodeId": 2,
-                    "nReturned": 4000,
-                    "executionTimeMillisEstimate": 0,
-                    "opens": 4000,
+                    "nReturned": 3200722,
+                    "executionTimeMillisEstimate": 6731,
+                    "opens": 3200722,
                     "closes": 1,
-                    "saveState": 7,
-                    "restoreState": 7,
+                    "saveState": 1954,
+                    "restoreState": 1954,
                     "isEOF": 1,
                     "limit": 1,
                     "inputStage": {
                       "stage": "seek",
                       "planNodeId": 2,
-                      "nReturned": 4000,
-                      "executionTimeMillisEstimate": 0,
-                      "opens": 4000,
+                      "nReturned": 3200722,
+                      "executionTimeMillisEstimate": 6596,
+                      "opens": 3200722,
                       "closes": 1,
-                      "saveState": 7,
-                      "restoreState": 7,
+                      "saveState": 1954,
+                      "restoreState": 1954,
                       "isEOF": 0,
-                      "numReads": 4000,
+                      "numReads": 3200722,
                       "recordSlot": 6,
                       "recordIdSlot": 7,
                       "seekRecordIdSlot": 1,
@@ -236,8 +236,8 @@
           }
         }
       },
-      "nReturned": 3877,
-      "executionTimeMillisEstimate": 6
+      "nReturned": 3117521,
+      "executionTimeMillisEstimate": 31704
     },
     {
       "$match": {
@@ -245,8 +245,8 @@
           "$gt": 1
         }
       },
-      "nReturned": 95,
-      "executionTimeMillisEstimate": 8
+      "nReturned": 59503,
+      "executionTimeMillisEstimate": 33243
     },
     {
       "$sort": {
@@ -255,17 +255,17 @@
           "_id.listing_id": 1
         }
       },
-      "totalDataSizeSortedBytesEstimate": 85758,
+      "totalDataSizeSortedBytesEstimate": 53812862,
       "usedDisk": false,
       "spills": 0,
       "spilledDataStorageSize": 0,
-      "nReturned": 95,
-      "executionTimeMillisEstimate": 8
+      "nReturned": 59503,
+      "executionTimeMillisEstimate": 33292
     }
   ],
   "serverInfo": {
-    "host": "wirelessprv-10-193-133-216.near.illinois.edu",
-    "port": 52397,
+    "host": "Abhinavs-MacBook-Air-1102.local",
+    "port": 63178,
     "version": "8.0.3",
     "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
   },

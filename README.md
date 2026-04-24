@@ -31,29 +31,35 @@ npm install
 npm start
 ```
 
-This boots an in-process MongoDB via `mongodb-memory-server`, loads ~14k records across the four cities, creates all eight indexes, runs Q1/Q5/Q6, and writes results + `explain('executionStats')` to `stage3-prototype/out/`. Total runtime: under 10 seconds on a laptop.
+This boots an in-process MongoDB via `mongodb-memory-server`, loads the **full** InsideAirbnb datasets for all four cities (no row caps — multiple millions of `calendar` rows), creates all eight indexes, runs **all 6 queries**, and writes results + `explain('executionStats')` to `stage3-prototype/out/`. Full-data runtime is several minutes on a laptop; for fast iteration use `npm run start:fast` instead, which caps each collection to a few thousand rows per city and finishes in under 10 seconds.
 
 Outputs:
 
-- `out/load_evidence.txt` - collection counts, sample documents, index list
-- `out/q1_results.json`, `out/q5_results.json`, `out/q6_results.json`
-- `out/explain_q1.json`, `out/explain_q5.json`, `out/explain_q6.json` - full execution plans
+- `out/load_evidence.txt` — collection counts (per-city and total), sample documents, index list
+- `out/q1_results.json` … `out/q6_results.json`
+- `out/explain_q1.json` … `out/explain_q6.json` — full execution plans
+- `out/summary.json` — one-line-per-query roll-up
 
 ## Run the demo UI (recommended for the presentation)
 
-A small Express + vanilla-JS frontend lives in `stage3-prototype/web/`. It boots the same in-process Mongo, loads the same data once, and exposes the three queries as an interactive UI.
+A small Express + vanilla-JS frontend lives in `stage3-prototype/web/`. It boots the same in-process Mongo, loads the same data once, and exposes **all six queries** as an interactive UI.
 
 ```bash
 cd stage3-prototype
 npm install        # only the first time, installs express
-npm run web
+npm run web        # full-data load (several minutes first boot)
+# or
+npm run web:fast   # capped load (~10s boot) for quick demos
 ```
 
-Then open <http://localhost:4173>. First boot takes ~10 s while the loader runs (a spinner overlay is shown); after that, every query runs against the live in-process database.
+Then open <http://localhost:4173>. While the loader runs, a spinner overlay is shown; after that, every query runs against the live in-process database.
 
 What the UI shows:
 
-- **Q1 — Two-night search.** City picker + date range. Renders the highest-rated listings whose `calendar` is open for both nights, as Airbnb-style cards with rating, neighborhood, room type, sleeps, and a few amenities.
+- **Q1 — Two-night search.** City picker + date range. Highest-rated listings whose `calendar` is open for both nights, as Airbnb-style cards.
+- **Q2 — Empty neighborhoods.** City + month picker. Anti-joins `calendar` activity against the full neighborhoods set and shows the dark ones as badges.
+- **Q3 — Salem entire-home availability windows.** City + month picker. One card per listing with explicit `from → to` bookable intervals (min-nights aware).
+- **Q4 — Portland booking trend.** Bar chart of total bookable nights per month, March → August (re-runs Q3's interval logic in a loop).
 - **Q5 — December reviews per city per year.** Per-city cards with a horizontal bar chart, one bar per year.
 - **Q6 — Re-book reminders.** One card per repeat-reviewer / listing pair, with the host's other listings in the same city pulled in via indexed point reads.
 

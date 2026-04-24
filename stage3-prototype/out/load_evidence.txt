@@ -2,13 +2,37 @@ $ npm start  (mongodb-memory-server)
 
 Connected DB: airbnb_stage3
 
-Collection counts (loaded subset):
-  listings:       1780
-  reviews:        4000
-  neighborhoods:  411
-  calendar:       8000
+Collection counts (loaded):
+  listings:       63,482
+  reviews:        3,200,722
+  neighborhoods:  481
+  calendar:       23,170,957
+
+Per-city listings:
+    los_angeles    45,585
+    portland       4,455
+    salem          280
+    san_diego      13,162
+Per-city reviews:
+    los_angeles    1,785,848
+    portland       500,309
+    salem          18,367
+    san_diego      896,198
+Per-city calendar:
+    los_angeles    16,638,552
+    portland       1,626,075
+    salem          102,200
+    san_diego      4,804,130
+Per-city neighborhoods:
+    los_angeles    270
+    portland       95
+    salem          8
+    san_diego      108
 
 Q1 demo dates picked from data: 2025-12-04 -> 2025-12-05
+Q2 demo month: 2026-06
+Q3 demo month: 2026-06
+Q4 demo year:  2026
 
 Sample listings (Portland):
 {
@@ -100,6 +124,10 @@ Sample reviews (San Diego):
 Sample neighborhoods (Los Angeles):
 {
   "city": "los_angeles",
+  "neighborhood": "Acton"
+}
+{
+  "city": "los_angeles",
   "neighborhood": "Adams-Normandie"
 }
 {
@@ -108,11 +136,7 @@ Sample neighborhoods (Los Angeles):
 }
 {
   "city": "los_angeles",
-  "neighborhood": "Alhambra"
-}
-{
-  "city": "los_angeles",
-  "neighborhood": "Arcadia"
+  "neighborhood": "Agua Dulce"
 }
 
 Indexes on listings:

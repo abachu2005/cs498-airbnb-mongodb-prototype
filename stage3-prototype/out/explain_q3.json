@@ -1,0 +1,227 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb_stage3.listings",
+    "parsedQuery": {
+      "$and": [
+        {
+          "city": {
+            "$eq": "salem"
+          }
+        },
+        {
+          "room_type": {
+            "$eq": "Entire home/apt"
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "47F54D23",
+    "planCacheKey": "9ABC329B",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "transformBy": {
+        "_id": 0,
+        "listing_id": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "city": 1,
+            "neighborhood": 1,
+            "room_type": 1
+          },
+          "indexName": "city_1_neighborhood_1_room_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "city": [],
+            "neighborhood": [],
+            "room_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "city": [
+              "[\"salem\", \"salem\"]"
+            ],
+            "neighborhood": [
+              "[MinKey, MaxKey]"
+            ],
+            "room_type": [
+              "[\"Entire home/apt\", \"Entire home/apt\"]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "_id": 0,
+          "listing_id": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "room_type": {
+              "$eq": "Entire home/apt"
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "city": 1,
+              "listing_id": 1
+            },
+            "indexName": "city_1_listing_id_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "city": [],
+              "listing_id": []
+            },
+            "isUnique": true,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "city": [
+                "[\"salem\", \"salem\"]"
+              ],
+              "listing_id": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 223,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 231,
+    "totalDocsExamined": 223,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "nReturned": 223,
+      "executionTimeMillisEstimate": 0,
+      "works": 231,
+      "advanced": 223,
+      "needTime": 7,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "_id": 0,
+        "listing_id": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 223,
+        "executionTimeMillisEstimate": 0,
+        "works": 231,
+        "advanced": 223,
+        "needTime": 7,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "docsExamined": 223,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 223,
+          "executionTimeMillisEstimate": 0,
+          "works": 231,
+          "advanced": 223,
+          "needTime": 7,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "keyPattern": {
+            "city": 1,
+            "neighborhood": 1,
+            "room_type": 1
+          },
+          "indexName": "city_1_neighborhood_1_room_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "city": [],
+            "neighborhood": [],
+            "room_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "city": [
+              "[\"salem\", \"salem\"]"
+            ],
+            "neighborhood": [
+              "[MinKey, MaxKey]"
+            ],
+            "room_type": [
+              "[\"Entire home/apt\", \"Entire home/apt\"]"
+            ]
+          },
+          "keysExamined": 231,
+          "seeks": 8,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "listings",
+    "filter": {
+      "city": "salem",
+      "room_type": "Entire home/apt"
+    },
+    "projection": {
+      "_id": 0,
+      "listing_id": 1
+    },
+    "$db": "airbnb_stage3"
+  },
+  "serverInfo": {
+    "host": "Abhinavs-MacBook-Air-1102.local",
+    "port": 63178,
+    "version": "8.0.3",
+    "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

@@ -30,7 +30,7 @@
           "indexFilterSet": false,
           "queryHash": "AD4BBF31",
           "planCacheKey": "BD004E57",
-          "optimizationTimeMillis": 0,
+          "optimizationTimeMillis": 1,
           "maxIndexedOrSolutionsReached": false,
           "maxIndexedAndSolutionsReached": false,
           "maxScansToExplodeReached": false,
@@ -80,7 +80,7 @@
             },
             "slotBasedPlan": {
               "slots": "$$RESULT=s29 env: { s2 = Nothing, s6 = {\"city\" : 1, \"date\" : 1, \"available\" : 1}, s10 = [{\"l\" : KS(3C706F72746C616E64003C323032352D31322D3034006F0104), \"h\" : KS(3C706F72746C616E64003C323032352D31322D3034006FFE04)}, {\"l\" : KS(3C706F72746C616E64003C323032352D31322D3035006F0104), \"h\" : KS(3C706F72746C616E64003C323032352D31322D3035006FFE04)}], s21 = false }",
-              "stages": "[4] project [s29 = newObj(\"_id\", s26, \"a\", s28)] \n[4] project [s28 = (convert ( s27, int32) ?: s27)] \n[4] group [s26] [s27 = count()] spillSlots[s25] mergingExprs[sum(s25)] \n[4] project [s26 = (s24 ?: null)] \n[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"66299ac5-030e-46e1-82c4-b115e214eeaf\" @\"city_1_date_1_available_1\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"66299ac5-030e-46e1-82c4-b115e214eeaf\" @\"city_1_date_1_available_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [s24 = listing_id] @\"66299ac5-030e-46e1-82c4-b115e214eeaf\" true false \n"
+              "stages": "[4] project [s29 = newObj(\"_id\", s26, \"a\", s28)] \n[4] project [s28 = (convert ( s27, int32) ?: s27)] \n[4] group [s26] [s27 = count()] spillSlots[s25] mergingExprs[sum(s25)] \n[4] project [s26 = (s24 ?: null)] \n[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"6350142f-3973-4e84-a0c1-342e538dad01\" @\"city_1_date_1_available_1\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"6350142f-3973-4e84-a0c1-342e538dad01\" @\"city_1_date_1_available_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [s24 = listing_id] @\"6350142f-3973-4e84-a0c1-342e538dad01\" true false \n"
             }
           },
           "rejectedPlans": [
@@ -136,19 +136,19 @@
         },
         "executionStats": {
           "executionSuccess": true,
-          "nReturned": 3,
-          "executionTimeMillis": 3,
-          "totalKeysExamined": 6,
-          "totalDocsExamined": 6,
+          "nReturned": 1826,
+          "executionTimeMillis": 112,
+          "totalKeysExamined": 3012,
+          "totalDocsExamined": 3012,
           "executionStages": {
             "stage": "project",
             "planNodeId": 4,
-            "nReturned": 3,
-            "executionTimeMillisEstimate": 0,
+            "nReturned": 1826,
+            "executionTimeMillisEstimate": 1,
             "opens": 1,
             "closes": 1,
-            "saveState": 1,
-            "restoreState": 1,
+            "saveState": 9,
+            "restoreState": 9,
             "isEOF": 1,
             "projections": {
               "29": "newObj(\"_id\", s26, \"a\", s28) "
@@ -156,12 +156,12 @@
             "inputStage": {
               "stage": "project",
               "planNodeId": 4,
-              "nReturned": 3,
-              "executionTimeMillisEstimate": 0,
+              "nReturned": 1826,
+              "executionTimeMillisEstimate": 1,
               "opens": 1,
               "closes": 1,
-              "saveState": 1,
-              "restoreState": 1,
+              "saveState": 9,
+              "restoreState": 9,
               "isEOF": 1,
               "projections": {
                 "28": "(convert ( s27, int32) ?: s27) "
@@ -169,12 +169,12 @@
               "inputStage": {
                 "stage": "group",
                 "planNodeId": 4,
-                "nReturned": 3,
-                "executionTimeMillisEstimate": 0,
+                "nReturned": 1826,
+                "executionTimeMillisEstimate": 1,
                 "opens": 1,
                 "closes": 1,
-                "saveState": 1,
-                "restoreState": 1,
+                "saveState": 9,
+                "restoreState": 9,
                 "isEOF": 1,
                 "groupBySlots": [
                   26
@@ -196,12 +196,12 @@
                 "inputStage": {
                   "stage": "project",
                   "planNodeId": 4,
-                  "nReturned": 6,
-                  "executionTimeMillisEstimate": 0,
+                  "nReturned": 3012,
+                  "executionTimeMillisEstimate": 1,
                   "opens": 1,
                   "closes": 1,
-                  "saveState": 1,
-                  "restoreState": 1,
+                  "saveState": 9,
+                  "restoreState": 9,
                   "isEOF": 1,
                   "projections": {
                     "26": "(s24 ?: null) "
@@ -209,24 +209,24 @@
                   "inputStage": {
                     "stage": "nlj",
                     "planNodeId": 2,
-                    "nReturned": 6,
-                    "executionTimeMillisEstimate": 0,
+                    "nReturned": 3012,
+                    "executionTimeMillisEstimate": 1,
                     "opens": 1,
                     "closes": 1,
-                    "saveState": 1,
-                    "restoreState": 1,
+                    "saveState": 9,
+                    "restoreState": 9,
                     "isEOF": 1,
-                    "totalDocsExamined": 6,
-                    "totalKeysExamined": 6,
+                    "totalDocsExamined": 3012,
+                    "totalKeysExamined": 3012,
                     "collectionScans": 0,
-                    "collectionSeeks": 6,
+                    "collectionSeeks": 3012,
                     "indexScans": 0,
                     "indexSeeks": 2,
                     "indexesUsed": [
                       "city_1_date_1_available_1",
                       "city_1_date_1_available_1"
                     ],
-                    "innerOpens": 6,
+                    "innerOpens": 3012,
                     "innerCloses": 1,
                     "outerProjects": [],
                     "outerCorrelated": [
@@ -239,12 +239,12 @@
                     "outerStage": {
                       "stage": "branch",
                       "planNodeId": 1,
-                      "nReturned": 6,
+                      "nReturned": 3012,
                       "executionTimeMillisEstimate": 0,
                       "opens": 1,
                       "closes": 1,
-                      "saveState": 1,
-                      "restoreState": 1,
+                      "saveState": 9,
+                      "restoreState": 9,
                       "isEOF": 1,
                       "numTested": 1,
                       "thenBranchOpens": 0,
@@ -280,8 +280,8 @@
                         "executionTimeMillisEstimate": 0,
                         "opens": 0,
                         "closes": 0,
-                        "saveState": 1,
-                        "restoreState": 1,
+                        "saveState": 9,
+                        "restoreState": 9,
                         "isEOF": 0,
                         "indexName": "city_1_date_1_available_1",
                         "keysExamined": 0,
@@ -297,15 +297,15 @@
                       "elseStage": {
                         "stage": "nlj",
                         "planNodeId": 1,
-                        "nReturned": 6,
+                        "nReturned": 3012,
                         "executionTimeMillisEstimate": 0,
                         "opens": 1,
                         "closes": 1,
-                        "saveState": 1,
-                        "restoreState": 1,
+                        "saveState": 9,
+                        "restoreState": 9,
                         "isEOF": 1,
                         "totalDocsExamined": 0,
-                        "totalKeysExamined": 6,
+                        "totalKeysExamined": 3012,
                         "collectionScans": 0,
                         "collectionSeeks": 0,
                         "indexScans": 0,
@@ -327,8 +327,8 @@
                           "executionTimeMillisEstimate": 0,
                           "opens": 1,
                           "closes": 1,
-                          "saveState": 1,
-                          "restoreState": 1,
+                          "saveState": 9,
+                          "restoreState": 9,
                           "isEOF": 1,
                           "projections": {
                             "8": "getField(s11, \"l\") ",
@@ -341,8 +341,8 @@
                             "executionTimeMillisEstimate": 0,
                             "opens": 1,
                             "closes": 1,
-                            "saveState": 1,
-                            "restoreState": 1,
+                            "saveState": 9,
+                            "restoreState": 9,
                             "isEOF": 1,
                             "inputSlot": 10,
                             "outSlot": 11,
@@ -355,8 +355,8 @@
                               "executionTimeMillisEstimate": 0,
                               "opens": 1,
                               "closes": 1,
-                              "saveState": 1,
-                              "restoreState": 1,
+                              "saveState": 9,
+                              "restoreState": 9,
                               "isEOF": 1,
                               "limit": 1,
                               "inputStage": {
@@ -366,8 +366,8 @@
                                 "executionTimeMillisEstimate": 0,
                                 "opens": 1,
                                 "closes": 1,
-                                "saveState": 1,
-                                "restoreState": 1,
+                                "saveState": 9,
+                                "restoreState": 9,
                                 "isEOF": 0
                               }
                             }
@@ -376,17 +376,17 @@
                         "innerStage": {
                           "stage": "ixseek",
                           "planNodeId": 1,
-                          "nReturned": 6,
+                          "nReturned": 3012,
                           "executionTimeMillisEstimate": 0,
                           "opens": 2,
                           "closes": 1,
-                          "saveState": 1,
-                          "restoreState": 1,
+                          "saveState": 9,
+                          "restoreState": 9,
                           "isEOF": 1,
                           "indexName": "city_1_date_1_available_1",
-                          "keysExamined": 6,
+                          "keysExamined": 3012,
                           "seeks": 2,
-                          "numReads": 8,
+                          "numReads": 3014,
                           "indexKeySlot": 15,
                           "recordIdSlot": 7,
                           "snapshotIdSlot": 13,
@@ -401,25 +401,25 @@
                     "innerStage": {
                       "stage": "limit",
                       "planNodeId": 2,
-                      "nReturned": 6,
-                      "executionTimeMillisEstimate": 0,
-                      "opens": 6,
+                      "nReturned": 3012,
+                      "executionTimeMillisEstimate": 1,
+                      "opens": 3012,
                       "closes": 1,
-                      "saveState": 1,
-                      "restoreState": 1,
+                      "saveState": 9,
+                      "restoreState": 9,
                       "isEOF": 1,
                       "limit": 1,
                       "inputStage": {
                         "stage": "seek",
                         "planNodeId": 2,
-                        "nReturned": 6,
-                        "executionTimeMillisEstimate": 0,
-                        "opens": 6,
+                        "nReturned": 3012,
+                        "executionTimeMillisEstimate": 1,
+                        "opens": 3012,
                         "closes": 1,
-                        "saveState": 1,
-                        "restoreState": 1,
+                        "saveState": 9,
+                        "restoreState": 9,
                         "isEOF": 0,
-                        "numReads": 6,
+                        "numReads": 3012,
                         "recordSlot": 22,
                         "recordIdSlot": 23,
                         "seekRecordIdSlot": 16,
@@ -442,8 +442,8 @@
           }
         }
       },
-      "nReturned": 3,
-      "executionTimeMillisEstimate": 0
+      "nReturned": 1826,
+      "executionTimeMillisEstimate": 2
     },
     {
       "$match": {
@@ -451,8 +451,8 @@
           "$eq": 2
         }
       },
-      "nReturned": 3,
-      "executionTimeMillisEstimate": 0
+      "nReturned": 1186,
+      "executionTimeMillisEstimate": 2
     },
     {
       "$lookup": {
@@ -501,21 +501,21 @@
           "preserveNullAndEmptyArrays": false
         }
       },
-      "totalDocsExamined": 3,
-      "totalKeysExamined": 3,
+      "totalDocsExamined": 1186,
+      "totalKeysExamined": 1186,
       "collectionScans": 0,
       "indexesUsed": [
         "city_1_listing_id_1"
       ],
-      "nReturned": 3,
-      "executionTimeMillisEstimate": 0
+      "nReturned": 1186,
+      "executionTimeMillisEstimate": 111
     },
     {
       "$replaceRoot": {
         "newRoot": "$b"
       },
-      "nReturned": 3,
-      "executionTimeMillisEstimate": 0
+      "nReturned": 1186,
+      "executionTimeMillisEstimate": 111
     },
     {
       "$sort": {
@@ -525,17 +525,17 @@
         },
         "limit": 25
       },
-      "totalDataSizeSortedBytesEstimate": 3948,
+      "totalDataSizeSortedBytesEstimate": 34253,
       "usedDisk": false,
       "spills": 0,
       "spilledDataStorageSize": 0,
-      "nReturned": 3,
-      "executionTimeMillisEstimate": 0
+      "nReturned": 25,
+      "executionTimeMillisEstimate": 111
     }
   ],
   "serverInfo": {
-    "host": "wirelessprv-10-193-133-216.near.illinois.edu",
-    "port": 52397,
+    "host": "Abhinavs-MacBook-Air-1102.local",
+    "port": 63178,
     "version": "8.0.3",
     "gitVersion": "89d97f2744a2b9851ddfb51bdf22f687562d9b06"
   },

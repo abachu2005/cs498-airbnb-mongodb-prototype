@@ -5,69 +5,84 @@
     "year": "2009"
   },
   {
-    "review_count": 3,
+    "review_count": 9,
+    "city": "los_angeles",
+    "year": "2010"
+  },
+  {
+    "review_count": 77,
     "city": "los_angeles",
     "year": "2011"
   },
   {
-    "review_count": 4,
+    "review_count": 182,
     "city": "los_angeles",
     "year": "2012"
   },
   {
-    "review_count": 5,
+    "review_count": 460,
     "city": "los_angeles",
     "year": "2013"
   },
   {
-    "review_count": 6,
+    "review_count": 1009,
     "city": "los_angeles",
     "year": "2014"
   },
   {
-    "review_count": 9,
+    "review_count": 2223,
     "city": "los_angeles",
     "year": "2015"
   },
   {
-    "review_count": 4,
+    "review_count": 3393,
+    "city": "los_angeles",
+    "year": "2016"
+  },
+  {
+    "review_count": 5950,
     "city": "los_angeles",
     "year": "2017"
   },
   {
-    "review_count": 7,
+    "review_count": 9271,
     "city": "los_angeles",
     "year": "2018"
   },
   {
-    "review_count": 7,
+    "review_count": 11775,
     "city": "los_angeles",
     "year": "2019"
   },
   {
-    "review_count": 1,
+    "review_count": 6288,
     "city": "los_angeles",
     "year": "2020"
   },
   {
-    "review_count": 3,
+    "review_count": 13409,
     "city": "los_angeles",
     "year": "2021"
   },
   {
-    "review_count": 6,
+    "review_count": 14323,
     "city": "los_angeles",
     "year": "2022"
   },
   {
-    "review_count": 1,
+    "review_count": 18417,
     "city": "los_angeles",
     "year": "2023"
   },
   {
-    "review_count": 3,
+    "review_count": 23440,
     "city": "los_angeles",
     "year": "2024"
+  },
+  {
+    "review_count": 1162,
+    "city": "los_angeles",
+    "year": "2025"
   },
   {
     "review_count": 2,
@@ -75,64 +90,79 @@
     "year": "2010"
   },
   {
-    "review_count": 4,
+    "review_count": 7,
+    "city": "portland",
+    "year": "2011"
+  },
+  {
+    "review_count": 51,
     "city": "portland",
     "year": "2012"
   },
   {
-    "review_count": 2,
+    "review_count": 122,
     "city": "portland",
     "year": "2013"
   },
   {
-    "review_count": 2,
+    "review_count": 280,
+    "city": "portland",
+    "year": "2014"
+  },
+  {
+    "review_count": 657,
     "city": "portland",
     "year": "2015"
   },
   {
-    "review_count": 7,
+    "review_count": 1092,
     "city": "portland",
     "year": "2016"
   },
   {
-    "review_count": 5,
+    "review_count": 1838,
     "city": "portland",
     "year": "2017"
   },
   {
-    "review_count": 3,
+    "review_count": 2814,
     "city": "portland",
     "year": "2018"
   },
   {
-    "review_count": 6,
+    "review_count": 3469,
     "city": "portland",
     "year": "2019"
   },
   {
-    "review_count": 2,
+    "review_count": 2067,
     "city": "portland",
     "year": "2020"
   },
   {
-    "review_count": 8,
+    "review_count": 3911,
     "city": "portland",
     "year": "2021"
   },
   {
-    "review_count": 1,
+    "review_count": 3368,
     "city": "portland",
     "year": "2022"
   },
   {
-    "review_count": 3,
+    "review_count": 3846,
     "city": "portland",
     "year": "2023"
   },
   {
-    "review_count": 3,
+    "review_count": 4684,
     "city": "portland",
     "year": "2024"
+  },
+  {
+    "review_count": 121,
+    "city": "portland",
+    "year": "2025"
   },
   {
     "review_count": 1,
@@ -155,39 +185,54 @@
     "year": "2015"
   },
   {
-    "review_count": 7,
+    "review_count": 20,
     "city": "salem",
     "year": "2016"
   },
   {
-    "review_count": 8,
+    "review_count": 36,
     "city": "salem",
     "year": "2017"
   },
   {
-    "review_count": 9,
+    "review_count": 67,
     "city": "salem",
     "year": "2018"
   },
   {
-    "review_count": 8,
+    "review_count": 78,
     "city": "salem",
     "year": "2019"
   },
   {
-    "review_count": 1,
+    "review_count": 67,
     "city": "salem",
     "year": "2020"
   },
   {
-    "review_count": 4,
+    "review_count": 103,
     "city": "salem",
     "year": "2021"
   },
   {
-    "review_count": 1,
+    "review_count": 131,
+    "city": "salem",
+    "year": "2022"
+  },
+  {
+    "review_count": 182,
     "city": "salem",
     "year": "2023"
+  },
+  {
+    "review_count": 257,
+    "city": "salem",
+    "year": "2024"
+  },
+  {
+    "review_count": 144,
+    "city": "salem",
+    "year": "2025"
   },
   {
     "review_count": 4,
@@ -195,72 +240,72 @@
     "year": "2010"
   },
   {
-    "review_count": 2,
+    "review_count": 11,
     "city": "san_diego",
     "year": "2011"
   },
   {
-    "review_count": 5,
+    "review_count": 34,
     "city": "san_diego",
     "year": "2012"
   },
   {
-    "review_count": 6,
+    "review_count": 126,
     "city": "san_diego",
     "year": "2013"
   },
   {
-    "review_count": 8,
+    "review_count": 293,
     "city": "san_diego",
     "year": "2014"
   },
   {
-    "review_count": 2,
+    "review_count": 696,
     "city": "san_diego",
     "year": "2015"
   },
   {
-    "review_count": 6,
+    "review_count": 1295,
     "city": "san_diego",
     "year": "2016"
   },
   {
-    "review_count": 5,
+    "review_count": 2156,
     "city": "san_diego",
     "year": "2017"
   },
   {
-    "review_count": 3,
+    "review_count": 3541,
     "city": "san_diego",
     "year": "2018"
   },
   {
-    "review_count": 1,
+    "review_count": 4551,
     "city": "san_diego",
     "year": "2019"
   },
   {
-    "review_count": 1,
+    "review_count": 3629,
     "city": "san_diego",
     "year": "2020"
   },
   {
-    "review_count": 8,
+    "review_count": 7095,
     "city": "san_diego",
     "year": "2021"
   },
   {
-    "review_count": 3,
+    "review_count": 7267,
     "city": "san_diego",
     "year": "2022"
   },
   {
-    "review_count": 1,
+    "review_count": 9882,
     "city": "san_diego",
     "year": "2023"
   },
   {
-    "review_count": 1,
+    "review_count": 11950,
     "city": "san_diego",
     "year": "2024"
   }

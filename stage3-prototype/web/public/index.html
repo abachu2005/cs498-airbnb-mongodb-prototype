@@ -40,6 +40,21 @@
         <span class="tab-title">Two-night search</span>
         <span class="tab-sub">filter &middot; group &middot; lookup &middot; sort</span>
       </button>
+      <button class="tab" data-tab="q2">
+        <span class="tab-tag">Q2</span>
+        <span class="tab-title">Empty neighborhoods</span>
+        <span class="tab-sub">anti-join &middot; per city &middot; per month</span>
+      </button>
+      <button class="tab" data-tab="q3">
+        <span class="tab-tag">Q3</span>
+        <span class="tab-title">Salem availability windows</span>
+        <span class="tab-sub">interval scan &middot; min-nights aware</span>
+      </button>
+      <button class="tab" data-tab="q4">
+        <span class="tab-tag">Q4</span>
+        <span class="tab-title">Portland booking trend</span>
+        <span class="tab-sub">monthly bookable nights &middot; Mar&ndash;Aug</span>
+      </button>
       <button class="tab" data-tab="q5">
         <span class="tab-tag">Q5</span>
         <span class="tab-title">December reviews</span>
@@ -88,6 +103,71 @@
         <div class="hint" id="q1-hint">Leave dates blank to use the earliest pair of consecutive available dates from the loaded data.</div>
 
         <div class="results" id="q1-results"></div>
+      </section>
+
+      <section id="panel-q2" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1>Neighborhoods with no listings in a month</h1>
+            <p class="lead">For a chosen city and month we anti-join <code>calendar</code> activity against the full <code>neighborhoods</code> set. Empty &equiv; nobody had a single available night.</p>
+          </div>
+        </header>
+        <form class="search" id="q2-form">
+          <label class="field">
+            <span>City</span>
+            <select id="q2-city">
+              <option value="portland">Portland</option>
+              <option value="los_angeles">Los Angeles</option>
+              <option value="san_diego">San Diego</option>
+              <option value="salem">Salem</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Month</span>
+            <input type="month" id="q2-month" />
+          </label>
+          <button type="submit" class="btn-primary">Run query</button>
+        </form>
+        <div class="hint" id="q2-hint">Leave blank to use the loaded data&rsquo;s middle month.</div>
+        <div class="results" id="q2-results"></div>
+      </section>
+
+      <section id="panel-q3" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1>Salem entire-home bookable windows</h1>
+            <p class="lead">For each Salem entire-home listing we scan its <code>calendar</code> for the chosen month, then keep only contiguous runs whose remaining length still satisfies that day&rsquo;s <code>minimum_nights</code>.</p>
+          </div>
+        </header>
+        <form class="search" id="q3-form">
+          <label class="field">
+            <span>City</span>
+            <select id="q3-city">
+              <option value="salem">Salem</option>
+              <option value="portland">Portland</option>
+              <option value="san_diego">San Diego</option>
+              <option value="los_angeles">Los Angeles</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Month</span>
+            <input type="month" id="q3-month" />
+          </label>
+          <button type="submit" class="btn-primary">Find windows</button>
+        </form>
+        <div class="hint" id="q3-hint">Each card is one listing; date ranges inside it are valid check-in&hellip;check-out windows.</div>
+        <div class="results" id="q3-results"></div>
+      </section>
+
+      <section id="panel-q4" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1>Portland booking trend &mdash; March through August</h1>
+            <p class="lead">Reuses the Q3 interval logic on a loop: per month, sum every entire-home listing&rsquo;s bookable nights. Useful for spotting demand shape across the season.</p>
+          </div>
+          <button id="q4-run" class="btn-primary">Run trend</button>
+        </header>
+        <div class="results" id="q4-results"></div>
       </section>
 
       <section id="panel-q5" class="panel">

@@ -1,15 +1,68 @@
 {
   "counts": {
-    "listings": 1780,
-    "reviews": 4000,
-    "neighborhoods": 411,
-    "calendar": 8000
+    "listings": 63482,
+    "reviews": 3200722,
+    "neighborhoods": 481,
+    "calendar": 23170957
   },
-  "q1_demo_dates": [
-    "2025-12-04",
-    "2025-12-05"
-  ],
-  "q1_rows": 3,
-  "q5_rows": 53,
-  "q6_rows": 25
+  "q1": {
+    "rows": 25,
+    "dates": [
+      "2025-12-04",
+      "2025-12-05"
+    ]
+  },
+  "q2": {
+    "city": "portland",
+    "month": "2026-06",
+    "empty": 2,
+    "total": 95
+  },
+  "q3": {
+    "city": "salem",
+    "month": "2026-06",
+    "listings_with_intervals": 151
+  },
+  "q4": {
+    "city": "portland",
+    "year": "2026",
+    "months": [
+      {
+        "month": "2026-03",
+        "listings_with_intervals": 2749,
+        "total_bookable_nights": 50547
+      },
+      {
+        "month": "2026-04",
+        "listings_with_intervals": 2563,
+        "total_bookable_nights": 48455
+      },
+      {
+        "month": "2026-05",
+        "listings_with_intervals": 2713,
+        "total_bookable_nights": 50928
+      },
+      {
+        "month": "2026-06",
+        "listings_with_intervals": 2315,
+        "total_bookable_nights": 43364
+      },
+      {
+        "month": "2026-07",
+        "listings_with_intervals": 2391,
+        "total_bookable_nights": 45930
+      },
+      {
+        "month": "2026-08",
+        "listings_with_intervals": 2351,
+        "total_bookable_nights": 46143
+      }
+    ]
+  },
+  "q5": {
+    "rows": 62
+  },
+  "q6": {
+    "rows": 25
+  }
 }
