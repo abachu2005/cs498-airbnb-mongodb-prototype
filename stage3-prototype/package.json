@@ -9,7 +9,8 @@
     "web": "node --max-old-space-size=8192 web/server.js",
     "web:fast": "LIMIT_LISTINGS=500 LIMIT_REVIEWS=1000 LIMIT_NEIGHBORHOODS=200 LIMIT_CALENDAR=2000 node web/server.js",
     "build:pdfs": "node scripts/build_pdfs.js",
-    "build:codepdf": "node scripts/build_code_pdf.js"
+    "build:codepdf": "node scripts/build_code_pdf.js",
+    "build:slides": "marp --pdf --allow-local-files STAGE_3_SLIDES.md -o STAGE_3_SLIDES.pdf"
   },
   "dependencies": {
     "csv-parse": "^6.2.1",
@@ -18,6 +19,7 @@
     "mongodb-memory-server": "^11.0.1"
   },
   "devDependencies": {
+    "@marp-team/marp-cli": "^4.3.1",
     "md-to-pdf": "^5.2.5"
   }
 }
