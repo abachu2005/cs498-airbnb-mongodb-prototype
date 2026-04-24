@@ -314,53 +314,32 @@
       <div>MongoDB + InsideAirbnb</div>
     </div>
     <div class="body">
-      <h2 class="kicker">Project status across the three stages</h2>
-      <h1 class="title" style="font-size:60px">Stage 3 implements the <span style="color:var(--accent)">Stage 2 design</span>.</h1>
+      <h2 class="kicker" style="font-size:22px">Project status across the three stages</h2>
+      <h1 class="title" style="font-size:104px;line-height:0.98">Stage 3 implements the <span style="color:var(--accent)">Stage 2 design</span>.</h1>
 
-      <div class="col3" style="margin-top:40px">
-        <div class="stat-tile">
-          <div class="label">Stage 1</div>
-          <div class="sub" style="margin-top:14px;font-size:20px;color:var(--ink)">Selected system and dataset: <b style="color:var(--teal)">MongoDB</b> with the <b style="color:var(--teal)">InsideAirbnb</b> CSVs for four cities.</div>
+      <div class="col3" style="margin-top:80px">
+        <div class="stat-tile" style="padding:48px 44px">
+          <div class="label" style="font-size:18px">Stage 1</div>
+          <div style="margin-top:28px;font-size:30px;line-height:1.4;color:var(--ink)">Selected system and dataset: <b style="color:var(--teal)">MongoDB</b> with the <b style="color:var(--teal)">InsideAirbnb</b> CSVs for four cities.</div>
         </div>
-        <div class="stat-tile">
-          <div class="label">Stage 2</div>
-          <div class="sub" style="margin-top:14px;font-size:20px;color:var(--ink)">Designed <b style="color:var(--teal)">4 collections</b> and <b style="color:var(--teal)">8 indexes</b>, with pseudocode for all six queries.</div>
+        <div class="stat-tile" style="padding:48px 44px">
+          <div class="label" style="font-size:18px">Stage 2</div>
+          <div style="margin-top:28px;font-size:30px;line-height:1.4;color:var(--ink)">Designed <b style="color:var(--teal)">4 collections</b> and <b style="color:var(--teal)">8 indexes</b>, with pseudocode for all six queries.</div>
         </div>
-        <div class="stat-tile" style="border-color:var(--accent); background: var(--accent-soft);">
-          <div class="label" style="color:var(--accent)">Stage 3 (this deliverable)</div>
-          <div class="sub" style="margin-top:14px;font-size:20px;color:var(--ink)">All <b>6 of 6</b> queries implemented against the <b>full</b> InsideAirbnb dataset, with <code style="background:#ffffffaa;padding:2px 6px;border-radius:4px">explain('executionStats')</code> recorded for every query.</div>
+        <div class="stat-tile" style="padding:48px 44px; border-color:var(--accent); background: var(--accent-soft);">
+          <div class="label" style="font-size:18px; color:var(--accent)">Stage 3 (this deliverable)</div>
+          <div style="margin-top:28px;font-size:30px;line-height:1.4;color:var(--ink)">All <b>6 of 6</b> queries implemented against the <b>full</b> InsideAirbnb dataset, with <code style="background:#ffffffaa;padding:2px 10px;border-radius:6px;font-size:26px">explain('executionStats')</code> recorded for every query.</div>
         </div>
       </div>
 
-      <div class="row-pill" style="margin-top:32px">
-        <span class="pill accent"><span class="dot"></span>6 of 6 queries implemented (assignment minimum: 4)</span>
-        <span class="pill teal"><span class="dot"></span>Full dataset across all four target cities</span>
-        <span class="pill">Evidence pipeline · <code style="background:transparent">npm start</code></span>
-        <span class="pill">Browser demo · <code style="background:transparent">npm run web</code></span>
+      <div class="row-pill" style="margin-top:72px;gap:16px">
+        <span class="pill accent" style="padding:18px 30px;font-size:24px"><span class="dot"></span>6 of 6 queries implemented (assignment minimum: 4)</span>
+        <span class="pill teal" style="padding:18px 30px;font-size:24px"><span class="dot"></span>Full dataset across all four target cities</span>
       </div>
-
-      <div class="label mt-32">Status against the assignment rubric</div>
-      <div class="col4 mt-12">
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl" style="color:var(--ink-mute)">Queries (20 pts)</div>
-          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">6 of 6</b> implemented</h3>
-          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">Assignment minimum is 4 (3 for two-person teams). Each query has <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">explain('executionStats')</code> output committed in <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">out/</code>.</p>
-        </div>
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl" style="color:var(--ink-mute)">Data coverage (10 pts)</div>
-          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Full</b> dataset loaded</h3>
-          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">All four cities and all four CSVs per city loaded with no row caps: 23.17 M calendar rows, 3.20 M reviews, 63.5 K listings.</p>
-        </div>
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl" style="color:var(--ink-mute)">Frontend</div>
-          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Browser-based</b> demo</h3>
-          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px">Express server with one tab per query, written in vanilla JavaScript. The demo screenshots in this deck are taken from the running application.</p>
-        </div>
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl" style="color:var(--ink-mute)">Reproducibility</div>
-          <h3 class="sub mt-12" style="font-size:23px"><b style="color:var(--accent)">Two</b> commands</h3>
-          <p style="font-size:15px;color:var(--ink-soft);line-height:1.5;margin-top:8px"><code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">npm start</code> regenerates the evidence; <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px">npm run web</code> launches the demo. No remote cluster or environment configuration is required.</p>
-        </div>
+      <div class="row-pill" style="margin-top:16px;gap:16px">
+        <span class="pill" style="padding:18px 30px;font-size:24px">Evidence pipeline · <code style="background:transparent;font-size:24px">npm start</code></span>
+        <span class="pill" style="padding:18px 30px;font-size:24px">Browser demo · <code style="background:transparent;font-size:24px">npm run web</code></span>
+        <span class="pill" style="padding:18px 30px;font-size:24px">Local only · no remote cluster required</span>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">02 / 12</span></div>
@@ -375,27 +354,27 @@
       <div>4 collections · 8 indexes</div>
     </div>
     <div class="body">
-     <div class="split" style="height:auto">
+     <div class="split" style="height:100%">
       <div>
-        <h2 class="kicker">Collection layout</h2>
-        <h1 class="title" style="font-size:50px">Time-series data is stored <span style="color:var(--accent)">separately</span> from listings.</h1>
-        <p class="lede" style="margin-top:18px;font-size:20px">Each of the four InsideAirbnb CSVs maps to one MongoDB collection. Calendar and review rows are kept out of the listing document so that adding a single booking or review does not require rewriting a large embedded array.</p>
+        <h2 class="kicker" style="font-size:22px">Collection layout</h2>
+        <h1 class="title" style="font-size:78px;line-height:0.98">Time-series data is stored <span style="color:var(--accent)">separately</span> from listings.</h1>
+        <p class="lede" style="margin-top:36px;font-size:28px;line-height:1.45">Each of the four InsideAirbnb CSVs maps to one MongoDB collection. Calendar and review rows are kept out of the listing document so that adding a single booking or review does not require rewriting a large embedded array.</p>
 
-        <div class="mt-24">
-          <table class="tbl">
-            <tr><th>collection</th><th>per-row</th><th>scale</th></tr>
-            <tr><td><b style="color:var(--teal)">listings</b></td><td>property metadata</td><td>~16 K / city</td></tr>
-            <tr><td><b style="color:var(--teal)">calendar</b></td><td>availability + price per day</td><td>365 × #listings</td></tr>
-            <tr><td><b style="color:var(--teal)">reviews</b></td><td>one row per review</td><td>~800 K / city</td></tr>
-            <tr><td><b style="color:var(--teal)">neighborhoods</b></td><td>canonical names</td><td>~120 / city</td></tr>
+        <div class="mt-32">
+          <table class="tbl" style="font-size:26px">
+            <tr><th style="font-size:16px;padding:18px 16px">collection</th><th style="font-size:16px;padding:18px 16px">per-row</th><th style="font-size:16px;padding:18px 16px">scale</th></tr>
+            <tr><td style="padding:20px 16px"><b style="color:var(--teal)">listings</b></td><td style="padding:20px 16px">property metadata</td><td style="padding:20px 16px">~16 K / city</td></tr>
+            <tr><td style="padding:20px 16px"><b style="color:var(--teal)">calendar</b></td><td style="padding:20px 16px">availability + price per day</td><td style="padding:20px 16px">365 × #listings</td></tr>
+            <tr><td style="padding:20px 16px"><b style="color:var(--teal)">reviews</b></td><td style="padding:20px 16px">one row per review</td><td style="padding:20px 16px">~800 K / city</td></tr>
+            <tr><td style="padding:20px 16px"><b style="color:var(--teal)">neighborhoods</b></td><td style="padding:20px 16px">canonical names</td><td style="padding:20px 16px">~120 / city</td></tr>
           </table>
         </div>
       </div>
 
       <div>
-        <div class="label">Indexes (carried unchanged from Stage 2)</div>
-        <div class="stat-tile mt-12" style="padding:24px 28px">
-          <div class="idx" style="font-size:15px;line-height:1.7">
+        <div class="label" style="font-size:18px">Indexes (carried unchanged from Stage 2)</div>
+        <div class="stat-tile mt-18" style="padding:48px 48px">
+          <div class="idx" style="font-size:26px;line-height:2.4">
 <span class="col">listings</span>     { city, listing_id }              <span class="uniq">UNIQUE</span><br/>
 <span class="col">listings</span>     { city, neighborhood, room_type }<br/>
 <span class="col">listings</span>     { host_id, city }<br/>
@@ -407,25 +386,9 @@
           </div>
         </div>
 
-        <div class="callout teal mt-18" style="font-size:18px">No schema or index changes were made between Stage 2 and Stage 3. The Stage-2 design was implemented as-is.</div>
+        <div class="callout teal mt-32" style="font-size:28px;padding:36px 40px;line-height:1.45">No schema or index changes were made between Stage 2 and Stage 3. The Stage-2 design was implemented as-is, and each query in slides 5–10 names the specific index it uses.</div>
       </div>
      </div>
-
-      <div class="label mt-32">Query-to-index mapping</div>
-      <table class="tbl mt-12" style="font-size:16px">
-        <tr>
-          <th>query</th>
-          <th>collection(s) touched</th>
-          <th>index that does the work</th>
-          <th>plan</th>
-        </tr>
-        <tr><td><b style="color:var(--accent)">Q1</b> · two-night search</td><td>calendar → listings</td><td><span class="mono">calendar { city, date, available }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN</span></td></tr>
-        <tr><td><b style="color:var(--accent)">Q2</b> · empty neighborhoods</td><td>calendar + listings + neighborhoods</td><td><span class="mono">calendar { city, date, available }</span> + <span class="mono">listings { city, listing_id }</span> + <span class="mono">neighborhoods { city, neighborhood }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×3</span></td></tr>
-        <tr><td><b style="color:var(--accent)">Q3</b> · bookable windows</td><td>listings → calendar</td><td><span class="mono">listings { city, neighborhood, room_type }</span> + <span class="mono">calendar { city, listing_id, date }</span></td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×2</span></td></tr>
-        <tr><td><b style="color:var(--accent)">Q4</b> · monthly trend</td><td>composes Q3 ×6</td><td>same indexes as Q3, looped per month</td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×12</span></td></tr>
-        <tr><td><b style="color:var(--accent)">Q5</b> · December reviews</td><td>reviews</td><td>no usable index — full collection scan</td><td><span class="pill accent" style="padding:2px 10px;font-size:13px;margin:0">COLLSCAN</span></td></tr>
-        <tr><td><b style="color:var(--accent)">Q6</b> · re-book reminder</td><td>reviews → listings + calendar + listings</td><td><span class="mono">reviews { reviewer_id, listing_id, date }</span> + three listings/calendar indexes per record</td><td><span class="pill teal" style="padding:2px 10px;font-size:13px;margin:0">IXSCAN ×4 / record</span></td></tr>
-      </table>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">03 / 12</span></div>
   </section>
@@ -550,19 +513,18 @@
     <div class="body split-43">
       <div>
         <h2 class="kicker">Q2 · anti-join over neighborhoods</h2>
-        <h1 class="title" style="font-size:48px">Identify neighborhoods with <span style="color:var(--accent)">no available</span> listings in a chosen month.</h1>
+        <h1 class="title" style="font-size:54px">Identify neighborhoods with <span style="color:var(--accent)">no available</span> listings in a chosen month.</h1>
 
-        <ul class="clean mt-18">
+        <ul class="clean mt-24" style="font-size:23px">
           <li><b>1.</b> <code style="background:var(--code-bg);padding:2px 8px;border-radius:4px">$match</code> calendar by city, month, and <code>available:true</code>; <code>$group</code> by listing</li>
           <li><b>2.</b> <code style="background:var(--code-bg);padding:2px 8px;border-radius:4px">$lookup</code> listings, project <code>neighborhood</code>, take the distinct active set</li>
           <li><b>3.</b> Anti-join in application code against the full <code>neighborhoods</code> list for that city</li>
         </ul>
 
-        <div class="callout mt-18">Full-data result for Portland in 2026-06: 2 of 95 neighborhoods (<i>Maywood Park</i>, <i>Woodland Park</i>) had no available listings.</div>
+        <div class="callout mt-24" style="font-size:21px;padding:22px 26px">Full-data result for Portland in 2026-06: <b>2 of 95</b> neighborhoods (<i>Maywood Park</i>, <i>Woodland Park</i>) had no available listings.</div>
 
-        <table class="tbl mt-18">
-          <tr><th>metric</th><th>value</th></tr>
-          <tr><td>indexes used</td><td class="mono" style="font-size:14px">calendar { city, date, available } + listings { city, listing_id } + neighborhoods { city, neighborhood }</td></tr>
+        <table class="tbl mt-24" style="font-size:22px">
+          <tr><th style="font-size:15px">metric</th><th style="font-size:15px">value</th></tr>
           <tr><td>calendar keys / docs examined</td><td class="num">84,194 / 84,164</td></tr>
           <tr><td>active listings (post <code>$group</code>)</td><td class="num">3,133</td></tr>
           <tr><td>execution time</td><td class="num">309 ms</td></tr>
@@ -572,22 +534,13 @@
       <div>
         <div class="frame">
           <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">localhost:4173 / Q2 — Empty neighborhoods</div></div>
-          <img class="shot" src="assets/demo_q2.png" alt="Q2 demo screenshot" />
+          <img class="shot" src="assets/demo_q2.png" alt="Q2 demo screenshot" style="max-height:740px" />
         </div>
-        <div class="frame-caption">Demo UI · full data · 2 of 95 Portland neighborhoods unavailable in <code>2026-06</code></div>
-        <div class="plan-note">
-          <div class="lbl">Query-plan note · Q2</div>
-          <div class="body-text">Three indexed reads, no full collection scans. The <code>$match</code> uses <code>calendar { city, date, available }</code>; the <code>$lookup</code> uses <code>listings { city, listing_id }</code>; the anti-join runs in application code over a small set (~95 neighborhood strings). The remaining cost worth addressing is the <code>$lookup</code> itself — see slide 11, item 03.</div>
+        <div class="frame-caption" style="font-size:16px;margin-top:18px">Demo UI · full data · 2 of 95 Portland neighborhoods unavailable in <code>2026-06</code></div>
+        <div class="plan-note" style="margin-top:36px;padding:36px 40px">
+          <div class="lbl" style="font-size:16px">Query-plan note · Q2</div>
+          <div class="body-text" style="font-size:24px;line-height:1.55;margin-top:14px">Three indexed reads, no full collection scans. The <code>$match</code> uses <code>calendar { city, date, available }</code>; the <code>$lookup</code> uses <code>listings { city, listing_id }</code>; the anti-join runs in application code over a small set (~95 neighborhood strings). The remaining cost worth addressing is the <code>$lookup</code> itself — see slide 11, item 03.</div>
         </div>
-
-        <div class="label mt-24">Raw evidence · <code style="background:var(--code-bg);padding:1px 6px;border-radius:3px;font-size:13px">out/q2_results.json</code></div>
-        <div class="code mt-12" style="font-size:16px">{
-  <span class="s">"city"</span>: <span class="s">"portland"</span>,
-  <span class="s">"month"</span>: <span class="s">"2026-06"</span>,
-  <span class="s">"total_neighborhoods"</span>: 95,
-  <span class="s">"active_neighborhoods"</span>: 93,
-  <span class="s">"empty_neighborhoods"</span>: [<span class="s">"Maywood Park"</span>, <span class="s">"Woodland Park"</span>]
-}</div>
       </div>
     </div>
     <div class="foot"><div>Bachu · Bahl · Arias</div><span class="num">06 / 12</span></div>
@@ -735,21 +688,16 @@
     <div class="body split-43">
       <div>
         <h2 class="kicker">Q6 · repeat-reviewer enrichment</h2>
-        <h1 class="title" style="font-size:46px">For each repeat reviewer, surface listings reviewed more than once and check current <span style="color:var(--accent)">availability</span>.</h1>
+        <h1 class="title" style="font-size:54px">For each repeat reviewer, surface listings reviewed more than once and check current <span style="color:var(--accent)">availability</span>.</h1>
 
-        <ul class="clean mt-18">
-          <li><b>1.</b> Aggregate <code>reviews</code> into repeat <i>(city, listing, reviewer)</i> groups using the <code>{ reviewer_id, listing_id, date }</code> index</li>
-          <li><b>2.</b> Per group: <code>findOne</code> listing, <code>findOne</code> calendar, <code>find</code> other host listings</li>
-          <li><b>3.</b> Emit one enriched reminder record per group</li>
-        </ul>
+        <p class="lede mt-24" style="font-size:23px">One aggregation over <code>reviews</code> using the <code>{ reviewer_id, listing_id, date }</code> index, followed by three indexed point reads per group: <code>findOne</code> listing, <code>findOne</code> calendar, and <code>find</code> other host listings. The query touches every collection in the schema.</p>
 
-        <div class="callout teal mt-18">No new indexes were required for any of the six queries. Every per-record read in step 2 uses an index already defined in Stage 2.</div>
-
-        <table class="tbl mt-18">
-          <tr><th>metric</th><th>value</th></tr>
-          <tr><td>aggregation index</td><td class="mono" style="font-size:14px">reviews { reviewer_id, listing_id, date }</td></tr>
+        <table class="tbl mt-32" style="font-size:23px">
+          <tr><th style="font-size:15px">metric</th><th style="font-size:15px">value</th></tr>
+          <tr><td>aggregation index</td><td class="mono" style="font-size:17px">reviews { reviewer_id, listing_id, date }</td></tr>
           <tr><td>reviews scanned (aggregation)</td><td class="num">3,200,722</td></tr>
           <tr><td>repeat-reviewer groups detected</td><td class="num">59,503</td></tr>
+          <tr><td>indexed point reads per group</td><td class="num">3</td></tr>
           <tr><td>reminders emitted (limit 25)</td><td class="num">25</td></tr>
         </table>
       </div>
@@ -757,12 +705,12 @@
       <div>
         <div class="frame">
           <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">localhost:4173 / Q6 — Re-book reminder</div></div>
-          <img class="shot" src="assets/demo_q6.png" alt="Q6 demo screenshot" />
+          <img class="shot" src="assets/demo_q6.png" alt="Q6 demo screenshot" style="max-height:620px" />
         </div>
-        <div class="frame-caption">Demo UI · full data · 25 repeat-reviewer reminders, each enriched with calendar and same-host listings</div>
-        <div class="plan-note">
-          <div class="lbl">Query-plan note · Q6</div>
-          <div class="body-text">One aggregation followed by a small batch of indexed point reads per record. Every per-record lookup uses a Stage-2 index. The remaining issue is the key order of <code>host_id_1_city_1</code>, discussed on slide 11, item 01.</div>
+        <div class="frame-caption" style="font-size:15px;margin-top:14px">Demo UI · full data · 25 repeat-reviewer reminders, each enriched with calendar and same-host listings</div>
+        <div class="plan-note" style="margin-top:24px;padding:22px 26px">
+          <div class="lbl" style="font-size:14px">Query-plan note · Q6</div>
+          <div class="body-text" style="font-size:20px;line-height:1.5">One aggregation followed by a small batch of indexed point reads per record. Every per-record lookup uses a Stage-2 index — no new indexes were added for any of the six queries. The remaining issue is the key order of <code>host_id_1_city_1</code>, discussed on slide 11, item 01.</div>
         </div>
       </div>
     </div>
@@ -839,71 +787,47 @@
   <section class="slide">
     <div class="top">
       <div class="crumb"><b>12</b>Lessons learned and recommendations</div>
-      <div>Repository · companion deliverables</div>
+      <div>End of deck</div>
     </div>
     <div class="body">
       <div class="split" style="height:auto">
         <div>
           <h2 class="kicker">Lessons specific to MongoDB</h2>
-          <h1 class="title" style="font-size:38px"><code style="background:var(--code-bg);padding:2px 12px;border-radius:6px;font-size:30px">explain</code> proved the most useful tool during development.</h1>
-          <ul class="clean mt-24">
-            <li><code>mongodb-memory-server</code> reduces the design loop from minutes to seconds and is recommended as the default for prototyping.</li>
-            <li><code>explain('executionStats')</code> was the most valuable design-validation tool; its output should be committed alongside the query code.</li>
-            <li>Effective schema design happens at <b>index-design time</b>, not collection-design time.</li>
+          <h1 class="title" style="font-size:46px"><code style="background:var(--code-bg);padding:2px 14px;border-radius:6px;font-size:36px">explain</code> proved the most useful tool during development.</h1>
+          <ul class="clean mt-32" style="font-size:24px">
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px"><code>mongodb-memory-server</code> reduces the design loop from minutes to seconds and is recommended as the default for prototyping.</li>
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px"><code>explain('executionStats')</code> was the most valuable design-validation tool; its output should be committed alongside the query code.</li>
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px">Effective schema design happens at <b>index-design time</b>, not collection-design time.</li>
           </ul>
         </div>
         <div>
           <h2 class="kicker">Lessons that transferred outside MongoDB</h2>
-          <h1 class="title" style="font-size:38px">Planner output is the only reliable signal of <span style="color:var(--teal)">actual behaviour</span>.</h1>
-          <ul class="clean teal mt-24">
-            <li>Multi-step orchestration in application code is preferable to nested <code>$lookup</code> for both clarity and memory in Q3, Q4, and Q6.</li>
-            <li>Pseudocode is necessary for design but the query planner output is the only evidence of how the query will actually run.</li>
-            <li>Loader and queries should be developed together; a schema is not validated until data has actually been loaded into it.</li>
+          <h1 class="title" style="font-size:46px">Planner output is the only reliable signal of <span style="color:var(--teal)">actual behaviour</span>.</h1>
+          <ul class="clean teal mt-32" style="font-size:24px">
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px">Multi-step orchestration in application code is preferable to nested <code>$lookup</code> for both clarity and memory in Q3, Q4, and Q6.</li>
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px">Pseudocode is necessary for design, but the query planner output is the only evidence of how the query will actually run.</li>
+            <li style="font-size:24px;line-height:1.5;padding:18px 0 18px 28px">Loader and queries should be developed together; a schema is not validated until data has actually been loaded into it.</li>
           </ul>
         </div>
       </div>
 
-      <div class="label mt-32">Recommended workflow for a similar project</div>
-      <div class="col4 mt-12">
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl">1 · Load before finalising schema</div>
-          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">Stand up <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">mongodb-memory-server</code> early; a schema cannot be evaluated against a dataset that has not been loaded.</p>
+      <div class="label mt-32" style="font-size:18px">Recommended workflow for a similar project</div>
+      <div class="col4 mt-18">
+        <div class="stat-tile" style="padding:36px 36px">
+          <div class="lbl" style="font-size:17px">1 · Load before finalising schema</div>
+          <p style="font-size:22px;color:var(--ink);line-height:1.5;margin:18px 0 0">Stand up <code style="background:var(--code-bg);padding:2px 8px;border-radius:4px;font-size:20px">mongodb-memory-server</code> early; a schema cannot be evaluated against a dataset that has not been loaded.</p>
         </div>
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl">2 · Add indexes per query, not in advance</div>
-          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">Write the query, run <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">explain</code>, and add the index the planner identified. Avoid speculative indexing.</p>
+        <div class="stat-tile" style="padding:36px 36px">
+          <div class="lbl" style="font-size:17px">2 · Add indexes per query, not in advance</div>
+          <p style="font-size:22px;color:var(--ink);line-height:1.5;margin:18px 0 0">Write the query, run <code style="background:var(--code-bg);padding:2px 8px;border-radius:4px;font-size:20px">explain</code>, and add the index the planner identified. Avoid speculative indexing.</p>
         </div>
-        <div class="stat-tile" style="padding:22px 24px">
-          <div class="lbl">3 · Prefer application code to nested <code style="background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:14px">$lookup</code></div>
-          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">When a join requires more than one stage, perform it in application code using indexed point reads. The result is easier to read and to debug.</p>
+        <div class="stat-tile" style="padding:36px 36px">
+          <div class="lbl" style="font-size:17px">3 · Prefer application code to nested <code style="background:var(--code-bg);padding:2px 7px;border-radius:4px;font-size:17px">$lookup</code></div>
+          <p style="font-size:22px;color:var(--ink);line-height:1.5;margin:18px 0 0">When a join requires more than one stage, perform it in application code using indexed point reads. Easier to read and easier to debug.</p>
         </div>
-        <div class="stat-tile" style="padding:22px 24px; border-color:var(--teal); background:var(--teal-soft);">
-          <div class="lbl" style="color:var(--teal)">4 · Commit results and explain output with the source</div>
-          <p style="font-size:16px;color:var(--ink);line-height:1.5;margin:10px 0 0">Each query should have a JSON result file and an <code style="background:#ffffffaa;padding:1px 5px;border-radius:3px;font-size:14px">explain</code> file committed alongside the implementation, so that behaviour is auditable.</p>
-        </div>
-      </div>
-
-      <div class="split-32 mt-32" style="height:auto">
-        <div>
-          <div class="label">Repository and run instructions</div>
-          <div class="stat-tile mt-12" style="padding:18px 22px">
-            <div class="mono" style="font-size:15px;line-height:1.7;color:var(--ink)">
-              github.com/abachu2005/cs498-airbnb-mongodb-prototype<br/><br/>
-              cd stage3-prototype<br/>
-              npm install<br/>
-              npm start          <span style="color:var(--ink-mute)"># evidence pipeline</span><br/>
-              npm run web        <span style="color:var(--ink-mute)"># browser demo</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="label">Companion deliverables</div>
-          <div class="row-pill mt-12">
-            <span class="pill"><span class="dot"></span>STAGE_3_Report_MongoDB_Airbnb.pdf</span>
-            <span class="pill"><span class="dot"></span>STAGE_3_Code.pdf</span>
-            <span class="pill"><span class="dot"></span>STAGE_3_SLIDES.pdf</span>
-          </div>
-          <p style="font-size:15px;color:var(--ink-soft);margin-top:14px;line-height:1.5">Submitted alongside this slide deck.</p>
+        <div class="stat-tile" style="padding:36px 36px; border-color:var(--teal); background:var(--teal-soft);">
+          <div class="lbl" style="font-size:17px; color:var(--teal)">4 · Commit results and explain output with the source</div>
+          <p style="font-size:22px;color:var(--ink);line-height:1.5;margin:18px 0 0">Each query should have a JSON result file and an <code style="background:#ffffffaa;padding:2px 8px;border-radius:4px;font-size:20px">explain</code> file committed alongside the implementation, so that behaviour is auditable.</p>
         </div>
       </div>
     </div>
